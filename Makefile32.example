@@ -7,7 +7,7 @@ KERNDIRS = libkern kernel mm fs arch/$(ARCH)/kernel arch/$(ARCH)/mm
 SUBDIRS = $(KERNDIRS)
 
 # Set your own cross compiler tool chain prefix here
-CROSSCOMPREFIX =
+CROSSCOMPREFIX = i686-elf-
 STACKPROT = -fno-stack-protector
 
 CC_FOR_TARGET = $(CROSSCOMPREFIX)gcc

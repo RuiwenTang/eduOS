@@ -35,7 +35,7 @@ extern int errno;
 
 int main(int argc, char** argv)
 {
-	int i;
+	// int i;
 
 	printf("Hello World!!!\n");
 	//for(i=0; environ[i]; i++)
