@@ -67,7 +67,7 @@ typedef long long ssize_t;
 typedef long long off_t;
 #endif
 #else
-#error unsupported architecture
+// #error unsupported architecture
 #endif
 
 /// Unsigned 64 bit integer

@@ -139,7 +139,7 @@ static int eduos_init(void)
 int main(void)
 {
 	char* argv1[] = {"/bin/hello", NULL};
-	//char* argv2[] = {"/bin/jacobi", NULL};
+	char* argv2[] = {"/bin/jacobi", NULL};
 
 	eduos_init();
 	system_calibration(); // enables also interrupts
@@ -155,7 +155,7 @@ int main(void)
 
 	create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
 	create_user_task(NULL, "/bin/hello", argv1);
-	//create_user_task(NULL, "/bin/jacobi", argv2);
+	create_user_task(NULL, "/bin/jacobi", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
 
 #if 0
