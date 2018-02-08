@@ -1,0 +1,68 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/arch/x86/include",
+                "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+            ],
+            "defines": ["__SIZEOF_POINTER__=4"],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/arch/x86/include",
+                    "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "macFrameworkPath": [
+            ]
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/arch/x86/include",
+                "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+            ],
+            "defines": ["__SIZEOF_POINTER__=4"],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/arch/x86/include",
+                    "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/arch/x86/include",
+                "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "__SIZEOF_POINTER__"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/arch/x86/include",
+                    "${workspaceRoot}/newlib/x86/i386-eduos-elf32/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 3
+}
