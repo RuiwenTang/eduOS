@@ -87,7 +87,7 @@ static char *ksprintn(char *nbuf, uintmax_t num, int base, int *lenp, int upper)
 	p = nbuf;
 	*p = '\0';
 	do {
-		c = hex2ascii(num % base);
+		c = hex2ascii(((uint32_t)num) % base);
 		*++p = upper ? toupper(c) : c;
 	} while (num /= base);
 	if (lenp)
