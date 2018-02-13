@@ -311,5 +311,10 @@ int memory_init(void)
 		}
 	}
 
+	/* make first page rw so we can back to real mode from protect mode */
+	page_map(0x7000, 0x7000, 2, PG_RW | PG_PRESENT);
+	page_clear_mark(0);
+	vma_add(0x0, PAGE_SIZE, VMA_READ | VMA_WRITE);
+
 	return ret;
 }

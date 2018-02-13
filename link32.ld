@@ -24,5 +24,7 @@ SECTIONS
     *(.bss)
   }
   bss_end = .;
+  . = 0x150000;
+  .switchmode : AT(ADDR(.switchmode)) { *(.text) }
   kernel_end = .;
 }

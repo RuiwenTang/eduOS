@@ -113,7 +113,10 @@ stublet:
 start32:
 	; Jump to the boot processors's C code
     extern main
+    push real_code_length
+    push real_code
     call main
+    add esp, 8
     jmp $
 
 
@@ -725,6 +728,19 @@ boot_pgd:
 boot_pgt:
 	times 512 DQ 0
 %endif
+
+[section .real]
+real_code:
+incbin "arch/x86/kernel/real86.bins"
+real_code_length equ $ - real_code
+
+[section .switchmode]
+back_to_pmode:
+    ret
+
+global back_to_rmode
+back_to_rmode:
+    jmp dword 0x38 : 0x7c00
 
 ; add some hints to the ELF file
 SECTION .note.GNU-stack noalloc noexec nowrite progbits

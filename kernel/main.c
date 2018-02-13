@@ -136,7 +136,9 @@ static int eduos_init(void)
 	return 0;
 }
 
-int main(void)
+extern void back_to_rmode();
+
+int main(const char* real_code, uint32_t real_code_length)
 {
 	char* argv1[] = {"/bin/hello", NULL};
 	char* argv2[] = {"/bin/jacobi", NULL};
@@ -153,11 +155,16 @@ int main(void)
 
 	//vma_dump();
 
-	create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
-	create_user_task(NULL, "/bin/hello", argv1);
-	create_user_task(NULL, "/bin/jacobi", argv2);
+	// create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
+	// create_user_task(NULL, "/bin/hello", argv1);
+	// create_user_task(NULL, "/bin/jacobi", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
+	kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
+	memcpy((void*)0x7c00, real_code, real_code_length);
 
+	// back_to_rmode();
+
+	// kprintf("Back from real mode\n");
 #if 0
 	kputs("Filesystem:\n");
 	list_fs(fs_root, 1);

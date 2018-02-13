@@ -142,13 +142,17 @@ include/eduos/config.inc: include/eduos/config.h
 	@echo "%define CONFIG_X86_$(BIT)" >> include/eduos/config.inc
 
 
-%.o : %.asm include/eduos/config.inc
+%.o : %.asm include/eduos/config.inc arch/x86/kernel/real86.bins
 	@echo [ASM] $@
 	$Q$(NASM) $(NASMFLAGS) -o $@ $<
 
 %.o : %.S
 	@echo [GCC-ASM] $@
 	$Q$(CC_FOR_TARGET) $(CFLAGS) -c -o $@ $<
+
+%.bins : %.nasm
+	echo [RAW file] $@
+	$Q$(NASM) -o $@ $<
 
 .PHONY: default all clean emu gdb newlib tools
 
