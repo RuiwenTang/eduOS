@@ -165,9 +165,10 @@ int main(const char* real_code, uint32_t real_code_length)
 
 	//vma_dump();
 
-	create_kernel_task(&ktask1_id, ktask1, "task1", NORMAL_PRIO);
-	create_kernel_task(NULL, foo, "foo", LOW_PRIO);
-	// create_user_task(NULL, "/bin/hello", argv1);
+	// create_kernel_task(&ktask1_id, ktask1, "task1", NORMAL_PRIO);
+	// create_kernel_task(NULL, foo, "foo", LOW_PRIO);
+	create_user_task(NULL, "/bin/demoservice", argv1);
+	create_user_task(NULL, "/bin/hello", argv2);
 	// create_user_task(NULL, "/bin/jacobi", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
 	kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
