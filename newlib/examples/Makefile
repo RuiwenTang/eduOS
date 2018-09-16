@@ -30,7 +30,7 @@ endif
 
 default: all
 
-all: hello jacobi
+all: hello jacobi demoservice
 
 hello: hello.o
 	@echo [LD] $@
@@ -40,6 +40,13 @@ hello: hello.o
 	$Qchmod a-x $@.sym
 
 jacobi: jacobi.o
+	@echo [LD] $@
+	$Q$(CC_FOR_TARGET) $(LDFLAGS) $(CFLAGS) -o $@ $< -lm
+	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym
+	$Q$(OBJCOPY_FOR_TARGET) $(STRIP_DEBUG) $@
+	$Qchmod a-x $@.sym
+
+demoservice: demoservice.c
 	@echo [LD] $@
 	$Q$(CC_FOR_TARGET) $(LDFLAGS) $(CFLAGS) -o $@ $< -lm
 	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym

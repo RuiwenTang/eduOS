@@ -311,7 +311,12 @@ default_handler:
 		(s->error & 0x8) ? "reserved bit" : "\b");
 #endif
 
-	while(1) HALT;
+	if (s->eip >= 0x40000000) {
+		// user task page fault
+		sys_exit(9);
+	} else {
+		while(1) HALT;
+	}
 }
 
 int page_init(void)
