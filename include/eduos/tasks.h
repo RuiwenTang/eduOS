@@ -149,13 +149,24 @@ int wakeup_task(tid_t);
  * - 0 on success
  * - -EINVAL (-22) on failure
  */
-int block_current_task(void);
+int block_current_task();
+
+int block_task(task_t* p_task);
 
 /** @brief Abort current task */
 void NORETURN abort(void);
 
 /** @brief This function shall be called by leaving kernel-level tasks */
 void NORETURN leave_kernel_task(void);
+
+
+/** @brief Get task by pid
+ * @parm pid task id
+ * @return
+ * - NULL if pid is invalidate
+ * - task_t* pointer of task_t
+ */
+task_t* get_task(int pid);
 
 #ifdef __cplusplus
 }

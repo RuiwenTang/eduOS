@@ -1,4 +1,16 @@
 {
     "files.associations": {
+        "syscall.h": "c",
+        "message.h": "c",
+        "assert.h": "c",
+        "tasks.h": "c",
+        "stddef.h": "c",
+        "config.h": "c",
+        "errno.h": "c",
+        "ios": "c",
+        "__locale": "c",
+        "__functional_03": "c",
+        "functional": "c",
+        "typeinfo": "c"
     }
 }

@@ -121,7 +121,7 @@ static void NORETURN do_exit(int arg)
 {
 	task_t* curr_task = current_task;
 
-	kprintf("Terminate task: %u, return value %d\n", curr_task->id, arg);
+	// kprintf("Terminate task: %u, return value %d\n", curr_task->id, arg);
 
 	page_map_drop();
 
@@ -284,7 +284,11 @@ int wakeup_task(tid_t id)
  * - 0 on success
  * - -EINVAL (-22) on failure
  */
-int block_current_task(void)
+int block_current_task() {
+	return block_task(0);
+}
+
+int block_task(task_t* p_task)
 {
 	tid_t id;
 	uint32_t prio;
@@ -292,8 +296,11 @@ int block_current_task(void)
 	uint8_t flags;
 
 	flags = irq_nested_disable();
-
-	id = current_task->id;
+	if (p_task == 0) {
+		id = current_task->id;
+	} else {
+		id = p_task->id;
+	}
 	prio = current_task->prio;
 
 	if (task_table[id].status == TASK_RUNNING) {
@@ -384,7 +391,7 @@ get_task_out:
 			orig_task->flags &= ~TASK_FPU_USED;
 		}
 
-		//kprintf("schedule from %u to %u with prio %u\n", orig_task->id, current_task->id, (uint32_t)current_task->prio);
+		// kprintf("schedule from %u to %u with prio %u\n", orig_task->id, current_task->id, (uint32_t)current_task->prio);
 
 		return (size_t**) &(orig_task->last_stack_pointer);
 	}
@@ -401,4 +408,16 @@ void reschedule(void)
 	if ((stack = scheduler()))
 		switch_context(stack);
 	irq_nested_enable(flags);
+}
+
+task_t* get_task(int pid) {
+	task_t* ret = NULL;
+	if (pid < MAX_TASKS) {
+		ret = &task_table[pid];
+		if (ret->status == TASK_INVALID) {
+			ret = NULL;
+		}
+	}
+	
+	return ret;
 }

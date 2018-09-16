@@ -40,6 +40,7 @@
 #include <eduos/stddef.h>
 #include <eduos/spinlock_types.h>
 #include <eduos/vma.h>
+#include <eduos/message.h>
 #include <asm/tasks_types.h>
 #include <asm/atomic.h>
 
@@ -53,6 +54,8 @@ extern "C" {
 #define TASK_BLOCKED	3
 #define TASK_FINISHED	4
 #define TASK_IDLE		5
+#define TASK_MSG_SENDING 6
+#define TASK_MSG_RECEVING 7
 
 #define TASK_DEFAULT_FLAGS	0
 #define TASK_FPU_INIT		(1 << 0)
@@ -99,6 +102,18 @@ typedef struct task {
 	struct task*	prev;
 	/// FPU state
 	union fpu_state	fpu;
+	/// for message rpc
+	MESSAGE* p_msg;
+	// sendto pid
+	uint32_t p_sendto;
+	uint32_t p_recvfrom;
+	// rpc status
+	uint32_t rpc_status;
+	// sending queue task that send message to this
+	struct task* sending_queue;
+	struct task* next_sending;
+	// interrupt message
+	uint32_t has_int_message;
 } task_t;
 
 typedef struct {

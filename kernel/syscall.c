@@ -108,6 +108,18 @@ ssize_t syscall_handler(uint32_t sys_nr, ...)
 		ret = 12;
 		break;
 	}
+	case __NR_send: {
+		int target = va_arg(vl, int);
+		void* msg = va_arg(vl, void*);
+		ret = do_msg_send(current_task->id, target, msg);
+		break;
+	}
+	case __NR_recv: {
+		int source = va_arg(vl, int);
+		void* msg = va_arg(vl, void*);
+		ret = do_msg_recv(source, current_task->id, msg);
+		break;
+	}
 	default:
 		kprintf("invalid system call: %u\n", sys_nr);
 		ret = -ENOSYS;
