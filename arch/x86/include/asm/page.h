@@ -192,4 +192,8 @@ int page_map_copy(struct task *dest);
 /** @brief Free a whole page map tree */
 int page_map_drop(void);
 
+#ifdef CONFIG_X86_32
+void* kernel_get_task_phys_addr(uint32_t cr3, void* virtualaddr);
+#endif
+
 #endif

@@ -117,6 +117,7 @@ static int ktask1(void* arg) {
 	ret = msg_recv(1, &msg);
 	kprintf("rece msg from 1 with msg = %d | with type = %d\n", msg.RETVAL, msg.type);
 
+	kprintf("end with task1\n");
 	return 1;
 }
 
@@ -127,10 +128,10 @@ static int foo(void* arg)
 	for(i=0; i<2; i++) {
 		kprintf("hello from %s\n", (char*) arg);
 	}
-
 	MESSAGE msg;
 	memset(&msg, 0, sizeof(MESSAGE));
 	kprintf("before foo receive msg\n");
+	msg.source = 0x1234;
 	int ret = msg_recv(MSG_TARGET_ANY, &msg);
 	kprintf("foo receive a message ret = %d | from src = %d | with type = %d \n", ret, msg.source, msg.type);
 	msg.RETVAL = 33;
@@ -179,15 +180,16 @@ int main(const char* real_code, uint32_t real_code_length)
 
 	//vma_dump();
 
-	create_kernel_task(NULL, foo, "foo", LOW_PRIO);
-	create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
-	// create_user_task(NULL, "/bin/hello", argv1);
+	create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
+	
+	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
+	create_user_task(NULL, "/bin/hello", argv1);
 	// create_user_task(NULL, "/bin/jacobi", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
 	kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
 	memcpy((void*)0x7c00, real_code, real_code_length);
 
-	back_to_rmode();
+	// back_to_rmode();
 
 	kprintf("Back from real mode\n");
 #if 0

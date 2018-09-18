@@ -117,7 +117,7 @@ ssize_t syscall_handler(uint32_t sys_nr, ...)
 	case __NR_recv: {
 		int source = va_arg(vl, int);
 		void* msg = va_arg(vl, void*);
-		ret = do_msg_recv(source, current_task->id, msg);
+		ret = do_msg_recv(source, current_task->id, (MESSAGE*)msg);
 		break;
 	}
 	default:

@@ -23,33 +23,34 @@ static int dead_block(int src, int dst) {
 }
 
 int msg_send(int target, MESSAGE* msg) {
-    msg->source = current_task->id;
     return syscall(__NR_send, target, (uint32_t) msg, 0, 0, 0);
 }
 
 
 int msg_recv(int source, MESSAGE* msg) {
-    msg->source = source;
     return syscall(__NR_recv, source, (uint32_t) msg, 0, 0, 0);
 }
 
 
 int do_msg_send(int source, int target, MESSAGE* msg) {
+    msg->source = source;
     if (dead_block(source, target)) {
         // message send deadblock
         kprintf("do_msg_send meet deadblock !!!!");
         return 1;
-    }
+    } 
     task_t* s_task = get_task(source);
     task_t* t_task = get_task(target);
+
     if (t_task == 0 || s_task == 0) {
         return -1;
     }
+    
 
     if (t_task->rpc_status == TASK_MSG_RECEVING
         && (t_task->p_recvfrom == source || t_task->p_recvfrom == MSG_TARGET_ANY)) {
             // target is waiting for receive message
-            void* src = virt_to_phys(msg);
+            void* src = msg;
             void* dst = virt_to_phys(t_task->p_msg);
             ((MESSAGE*) dst)->source = source;
             
@@ -90,7 +91,7 @@ int do_msg_send(int source, int target, MESSAGE* msg) {
 }
 
 int do_msg_recv(int source, int target, MESSAGE* msg) {
-
+    msg->source = source;
     task_t* target_task = get_task(target);
     task_t* prev = 0;
     task_t* p_from = 0;
@@ -109,8 +110,7 @@ int do_msg_recv(int source, int target, MESSAGE* msg) {
         rece_msg.source = MSG_TARGET_INTERRUPT;
         rece_msg.type = HARD_INT;
 
-        void* p_rece_msg = virt_to_phys(msg);
-        memcpy(p_rece_msg, &rece_msg, sizeof(MESSAGE));
+        memcpy(msg, &rece_msg, sizeof(MESSAGE));
 
         target_task->has_int_message = 0;
         target_task->rpc_status = 0;
@@ -156,7 +156,7 @@ int do_msg_recv(int source, int target, MESSAGE* msg) {
         }
 
         void* p_src = virt_to_phys(p_from->p_msg);
-        void* p_dst = virt_to_phys(msg);
+        void* p_dst = msg;
         
         memcpy(p_dst, p_src, sizeof(MESSAGE));
         ((MESSAGE*)p_dst)->source = p_from->id;

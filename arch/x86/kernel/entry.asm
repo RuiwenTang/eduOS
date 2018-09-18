@@ -443,6 +443,9 @@ extern get_current_stack
 extern finish_task_switch
 
 %ifdef CONFIG_X86_32
+global cr3_save
+cr3_save:
+    dd 0
 ; Used to realize system calls.
 ; By entering the handler, the interrupt flag is not cleared.
 global isrsyscall

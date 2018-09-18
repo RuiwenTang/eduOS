@@ -31,6 +31,10 @@
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+
+#define CONFIG_X86_32
+#include "rpc/message.h"
+
 #undef errno
 extern int errno;
 
@@ -41,6 +45,13 @@ int main(int argc, char** argv)
 	printf("Hello World!!!\n");
 	printf("argc = %d\n", argc);
 	printf("argv[0] = %s\n", argv[0]);
+	MESSAGE msg;
+	msg.source = 123;
+	printf("addr = %lx\n", (uint32_t)&msg);
+	msg.type = 220;
+	msg_send(1, (uint32_t)&msg);
+	msg_recv(1, (uint32_t)&msg);
+	printf("receive msg from %ld, type = %ld\n", msg.source, msg.type);
 	//for(i=0; environ[i]; i++)
 	//	printf("environ[%d] = %s\n", i, environ[i]);
 	//for(i=0; i<argc; i++)

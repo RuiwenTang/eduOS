@@ -353,3 +353,21 @@ int page_init(void)
 
 	return 0;
 }
+
+#ifdef CONFIG_X86_32
+void* kernel_get_task_phys_addr(uint32_t cr3, void* virtualaddr) {
+	// uint32_t pdindex = (unsigned long)virtualaddr >> 22;
+    // uint32_t ptindex = (unsigned long)virtualaddr >> 12 & 0x03FF;
+	uint32_t** pd = (uint32_t**)cr3;
+	// uint32_t* pt = pd + pdindex;
+	// return (void*)((pt[ptindex] & ~0xFFF) + ((unsigned long)virtualaddr & 0xFFF));
+
+	uint32_t addr = (uint32_t) virtualaddr;
+	size_t vpn   = addr >> PAGE_BITS;	// virtual page number
+	size_t entry = pd[0][vpn];		// page table entry
+	size_t off   = addr  & ~PAGE_MASK;	// offset within page
+	size_t phy   = entry &  PAGE_MASK;	// physical page frame number
+
+	return phy | off;
+}
+#endif // CONFIG_X86_32
