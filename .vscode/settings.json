@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.bins": "asm",
+        "*.raws": "asm",
         "syscall.h": "c",
         "message.h": "c",
         "assert.h": "c",
@@ -11,6 +13,8 @@
         "__locale": "c",
         "__functional_03": "c",
         "functional": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "iostream": "cpp",
+        "memory": "cpp"
     }
 }

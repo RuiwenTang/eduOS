@@ -166,7 +166,7 @@ extern void back_to_rmode();
 int main(const char* real_code, uint32_t real_code_length)
 {
 	char* argv1[] = {"/bin/hello", NULL};
-	char* argv2[] = {"/bin/jacobi", NULL};
+	char* argv2[] = {"/bin/hellocpp", NULL};
 
 	eduos_init();
 	system_calibration(); // enables also interrupts
@@ -184,7 +184,7 @@ int main(const char* real_code, uint32_t real_code_length)
 	
 	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
 	create_user_task(NULL, "/bin/hello", argv1);
-	// create_user_task(NULL, "/bin/jacobi", argv2);
+	create_user_task(NULL, "/bin/hellocpp", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
 	kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
 	memcpy((void*)0x7c00, real_code, real_code_length);

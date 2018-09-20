@@ -1,7 +1,7 @@
 ARCH = x86
 BIT = 32
 
-NEWLIB = ../x86/i386-eduos-elf32
+# NEWLIB = ../x86/i386-eduos-elf32
 MAKE = make
 STRIP_DEBUG = --strip-debug
 KEEP_DEBUG = --only-keep-debug
@@ -28,9 +28,21 @@ endif
 	@echo [CC] $@
 	$Q$(CC_FOR_TARGET) -c $(CFLAGS) -o $@ $< 
 
+%.o : %.cpp
+	@echo [CXX] $@
+	$Q$(CXX_FOR_TARGET) -c $(CFLAGS) -o $@ $< 
+
 default: all
 
-all: hello jacobi demoservice
+all: hello jacobi demoservice hellocpp
+
+hellocpp: hellocpp.o
+	@echo [LD] $@
+	@echo $(LDFLAGS)
+	$Q$(CXX_FOR_TARGET) $(LDFLAGS) -lsupc++ $(CFLAGS) -o $@ $<
+	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym
+	$Q$(OBJCOPY_FOR_TARGET) $(STRIP_DEBUG) $@
+	$Qchmod a-x $@.sym
 
 hello: hello.o
 	@echo [LD] $@
