@@ -1,5 +1,6 @@
+#! /bin/bash
 export PREFIX="$HOME/Projects/os/cross"
-export TARGET=i686-elf
+export TARGET=i686-eduos
 export PATH="$PREFIX/bin:$PATH"
 export CROSS_SYSROOT="$HOME/Projects/os/sysroot"
 
@@ -22,7 +23,7 @@ rm -rf build-gcc
 mkdir build-gcc
 cd build-gcc
 # cp -Rv ../toolchain/gcc-7.1.0 ..
-../gcc-7.1.0/configure --target=$TARGET --prefix="$PREFIX" --enable-languages=c,c++ --with-newlib
+../gcc-7.1.0/configure --target=$TARGET --prefix="$PREFIX" --enable-languages=c,c++ --with-newlib --with-sysroot=$CROSS_SYSROOT
 make all-gcc
 make all-target-libgcc
 #SHLIB_LINK="i686-elf-gcc -O2 -fPIC -shared @shlib_objs@ -o @shlib_base_name@.ell" make all-target-libgcc

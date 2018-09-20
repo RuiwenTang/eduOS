@@ -2,6 +2,8 @@ TOPDIR = $(shell pwd)
 ARCH = x86
 BIT = 32
 
+NEWLIB_PREFX=$(HOME)/Projects/os/sysroot/usr
+
 ifeq ($(ARCH),x86)
 ifeq ($(BIT),32)
 	TARGET=i386-eduos-elf32
