@@ -39,6 +39,7 @@
 #include <eduos/message.h>
 
 #include <asm/irq.h>
+#include <asm/ide.h>
 #include <asm/atomic.h>
 #include <asm/page.h>
 #include <asm/uart.h>
@@ -150,6 +151,7 @@ static int eduos_init(void)
 	koutput_init();
 	system_init();
 	irq_init();
+	ide_init();
 	timer_init();
 	multitasking_init();
 	memory_init();
@@ -161,7 +163,7 @@ static int eduos_init(void)
 	return 0;
 }
 
-extern void back_to_rmode();
+extern int back_to_rmode();
 
 int main(const char* real_code, uint32_t real_code_length)
 {
@@ -171,27 +173,27 @@ int main(const char* real_code, uint32_t real_code_length)
 	eduos_init();
 	system_calibration(); // enables also interrupts
 
-	kprintf("This is eduOS %s Build %u, %u\n", EDUOS_VERSION, &__BUILD_DATE, &__BUILD_TIME);
-	kprintf("Kernel starts at %p and ends at %p\n", &kernel_start, &kernel_end);
-	kprintf("Processor frequency: %u MHz\n", get_cpu_frequency());
-	kprintf("Total memory: %lu KiB\n", atomic_int32_read(&total_pages) * PAGE_SIZE / 1024);
-	kprintf("Current allocated memory: %lu KiB\n", atomic_int32_read(&total_allocated_pages) * PAGE_SIZE / 1024);
-	kprintf("Current available memory: %lu KiB\n", atomic_int32_read(&total_available_pages) * PAGE_SIZE / 1024);
+	// kprintf("This is eduOS %s Build %u, %u\n", EDUOS_VERSION, &__BUILD_DATE, &__BUILD_TIME);
+	// kprintf("Kernel starts at %p and ends at %p\n", &kernel_start, &kernel_end);
+	// kprintf("Processor frequency: %u MHz\n", get_cpu_frequency());
+	// kprintf("Total memory: %lu KiB\n", atomic_int32_read(&total_pages) * PAGE_SIZE / 1024);
+	// kprintf("Current allocated memory: %lu KiB\n", atomic_int32_read(&total_allocated_pages) * PAGE_SIZE / 1024);
+	// kprintf("Current available memory: %lu KiB\n", atomic_int32_read(&total_available_pages) * PAGE_SIZE / 1024);
 
 	//vma_dump();
 
-	create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
+	// create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
 	
 	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
-	create_user_task(NULL, "/bin/hello", argv1);
-	create_user_task(NULL, "/bin/hellocpp", argv2);
+	// create_user_task(NULL, "/bin/hello", argv1);
+	// create_user_task(NULL, "/bin/hellocpp", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
-	kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
+	// kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
 	memcpy((void*)0x7c00, real_code, real_code_length);
 
-	// back_to_rmode();
+	// int ret = back_to_rmode();
 
-	kprintf("Back from real mode\n");
+	// kprintf("Back from real mode ret = %d\n", ret);
 #if 0
 	kputs("Filesystem:\n");
 	list_fs(fs_root, 1);

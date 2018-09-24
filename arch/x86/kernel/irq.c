@@ -291,3 +291,14 @@ leave_handler:
 
 	return NULL;
 }
+
+void pic_send_eoi(uint8_t irq) {
+	if(irq >= 8)
+		outportb(PIC2_COMMAND, PIC_CMD_EOI);
+	outportb(PIC1_COMMAND, PIC_CMD_EOI);
+}
+
+void send_eoi(uint8_t irq)
+{
+	pic_send_eoi(irq);
+}

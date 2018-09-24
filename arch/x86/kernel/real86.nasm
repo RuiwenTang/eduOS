@@ -65,6 +65,7 @@ GoRMode:
     mov eax, [saveESP]      ; reset protect mode esp
     mov esp, eax
 
+    mov eax, 0x20
     jmp dword 0x08 : 0x150000   ; far jmp to protect mode
 
 error:

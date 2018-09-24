@@ -72,6 +72,8 @@ extern "C" {
 #define PIC1_OFFSET 0x20
 #define PIC2_OFFSET 0x28
 
+#define PIC_CMD_EOI 0x20
+
 /** @brief Pointer-type to IRQ-handling functions
  *
  * Whenever you write a IRQ-handling function it has to match this signature.
@@ -101,6 +103,18 @@ int irq_uninstall_handler(unsigned int irq);
  * @return Just returns 0 in any case
  */
 int irq_init(void);
+
+#define IRQ_START asm volatile("add $0x1c, %esp"); \
+		asm volatile("pusha");
+
+#define IRQ_END asm volatile("popa");
+
+void pic_send_eoi(uint8_t irq);
+
+/**
+ * 
+ */
+void send_eoi(uint8_t irq);
 
 #ifdef __cplusplus
 }

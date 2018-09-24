@@ -15,6 +15,11 @@
         "functional": "c",
         "typeinfo": "c",
         "iostream": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "stdio.h": "c",
+        "iterator": "c",
+        "locale": "c",
+        "string": "c",
+        "istream": "c"
     }
 }
