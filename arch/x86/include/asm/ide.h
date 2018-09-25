@@ -2,6 +2,7 @@
 #define __ARCH_IDE_H__
 
 #include <eduos/stddef.h>
+#include <eduos/device.h>
 
 #define ATA_SR_BSY     0x80
 #define ATA_SR_DRDY    0x40
@@ -84,8 +85,13 @@
 
 typedef struct {
 	uint8_t drive;
+	uint32_t size;
+	uint32_t commandSets;
+	uint8_t model[40];
 } ide_private_data;
 
 void ide_init(void);
+uint8_t ata_read_one(uint8_t *buf, uint32_t lba, device_t *dev);
+void ata_read(uint8_t *buf, uint32_t lba, uint32_t numsects, device_t *dev);
 
 #endif

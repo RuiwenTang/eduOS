@@ -20,6 +20,13 @@
         "iterator": "c",
         "locale": "c",
         "string": "c",
-        "istream": "c"
+        "istream": "c",
+        "device.h": "c",
+        "stdlib.h": "c",
+        "sstream": "c",
+        "bitset": "c",
+        "initializer_list": "c",
+        "string_view": "c",
+        "utility": "c"
     }
 }

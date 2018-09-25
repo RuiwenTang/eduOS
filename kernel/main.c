@@ -37,6 +37,7 @@
 #include <eduos/vma.h>
 #include <eduos/fs.h>
 #include <eduos/message.h>
+#include <eduos/device.h>
 
 #include <asm/irq.h>
 #include <asm/ide.h>
@@ -151,10 +152,11 @@ static int eduos_init(void)
 	koutput_init();
 	system_init();
 	irq_init();
-	ide_init();
 	timer_init();
 	multitasking_init();
 	memory_init();
+	device_init();
+	ide_init();
 #ifdef CONFIG_UART
 	uart_init();
 #endif
