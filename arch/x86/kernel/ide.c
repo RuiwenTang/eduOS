@@ -193,12 +193,13 @@ uint8_t ata_read_one(uint8_t *buf, uint32_t lba, device_t *dev) {
 	return 1;
 }
 
-void ata_read(uint8_t *buf, uint32_t lba, uint32_t numsects, device_t *dev) {
+uint8_t ata_read(uint8_t *buf, uint32_t lba, uint32_t numsects, void *dev) {
 	for(int i = 0; i < numsects; i++)
 	{
-		ata_read_one(buf, lba + i, dev);
+		ata_read_one(buf, lba + i, (device_t*)dev);
 		buf += 512;
 	}
+	return 0;
 }
 
 void ata_probe()
@@ -220,7 +221,7 @@ void ata_probe()
 			str[i] = ide_buf[ATA_IDENT_MODEL + i + 1];
 			str[i + 1] = ide_buf[ATA_IDENT_MODEL + i];
 		}
-		str[40] = 0;
+		str[39] = 0;
 		memcpy(dev.name, str, 40);
 		dev.unique_id = 32;
 		dev.dev_type = DEVICE_BLOCK;
@@ -237,7 +238,34 @@ void ata_probe()
 		kprintf("Device: %s\n", str);
 		// kprintf("Device size = %d\n", priv->size * 512 / 1024 / 1024);
 	}
-	// ide_identify(ATA_PRIMARY, ATA_SLAVE);
+	if (ide_identify(ATA_PRIMARY, ATA_SLAVE)) {
+		ata_ps = 1;
+		device_t dev;
+		ide_private_data *priv = (ide_private_data *)kmalloc(sizeof(ide_private_data));
+		/* Now, process the IDENTIFY data */
+		/* Model goes from W#27 to W#46 */
+		char str[40] = {0};
+		for(int i = 0; i < 39; i += 2)
+		{
+			str[i] = ide_buf[ATA_IDENT_MODEL + i + 1];
+			str[i + 1] = ide_buf[ATA_IDENT_MODEL + i];
+		}
+		str[39] = 0;
+		memcpy(dev.name, str, 40);
+		dev.unique_id = 33;
+		dev.dev_type = DEVICE_BLOCK;
+		priv->drive = (ATA_PRIMARY << 1) | ATA_SLAVE;
+		priv->commandSets = *((unsigned int *)(ide_buf + ATA_IDENT_COMMANDSETS));
+		if (priv->commandSets  & (1 << 26)) {
+			priv->size = *((unsigned int *)(ide_buf + ATA_IDENT_MAX_LBA_EXT));
+		} else {
+			priv->size = *((unsigned int *)(ide_buf + ATA_IDENT_MAX_LBA));
+		}
+		dev.priv = priv;
+		dev.read = ata_read;
+		device_add(&dev);
+		kprintf("Device: %s\n", str);
+	}
 	// ide_identify(ATA_SECONDARY, ATA_MASTER);
 	// ide_identify(ATA_SECONDARY, ATA_SLAVE);
 }

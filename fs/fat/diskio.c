@@ -8,7 +8,7 @@
 /*-----------------------------------------------------------------------*/
 
 #include <eduos/device.h>
-#include <asm/ide.h>
+#include <eduos/stdio.h>
 #include "diskio.h"		/* FatFs lower layer API */
 
 /* Definitions of physical drive number for each drive */
@@ -16,20 +16,35 @@
 #define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
 #define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
 
+#define NO_INIT 	1
+#define NO_DEVICE 	2
+#define INITED		0
+
+static int disk_state = NO_DEVICE;
+static int mmc_state = NO_DEVICE;
+static int usb_state = NO_DEVICE;
+
+static device_t* disk_device = 0;
+
 static int RAM_disk_status() {
-	return 0;
+	return disk_state;
 }
 
 static int MMC_disk_status() {
-	return 0;
+	return 2;
 }
 
 static int USB_disk_status() {
-	return 0;
+	return 2;
 }
 
 static int RAM_disk_initialize() {
-	return 0;
+	disk_device = device_get_by_id(32);
+	if (disk_device != NULL) {
+		disk_state = INITED;
+		return 0;
+	}
+	return NO_DEVICE;
 }
 
 static int MMC_disk_initialize() {
@@ -41,27 +56,31 @@ static int USB_disk_initialize() {
 }
 
 static int RAM_disk_read(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	if (disk_device) {
+		disk_device->read(buffer, sector, count, (void*)disk_device);
+		return RES_OK;
+	}
+	return RES_NOTRDY;
 }
 
 static int MMC_disk_read(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	return RES_NOTRDY;
 }
 
 static int USB_disk_read(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	return RES_NOTRDY;
 }
 
 static int RAM_disk_write(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	return RES_NOTRDY;
 }
 
 static int MMC_disk_write(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	return RES_NOTRDY;
 }
 
 static int USB_disk_write(BYTE* buffer, DWORD sector, UINT count) {
-	return 0;
+	return RES_NOTRDY;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -72,14 +91,16 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
+	DSTATUS stat = 2;
 	int result;
-
 	switch (pdrv) {
 	case DEV_RAM :
 		result = RAM_disk_status();
 
 		// translate the reslut code here
+		if (result == 0) {
+			stat = 0;
+		}
 
 		return stat;
 
@@ -118,6 +139,7 @@ DSTATUS disk_initialize (
 		result = RAM_disk_initialize();
 
 		// translate the reslut code here
+		stat = result;
 
 		return stat;
 
@@ -161,6 +183,7 @@ DRESULT disk_read (
 		result = RAM_disk_read(buff, sector, count);
 
 		// translate the reslut code here
+		res = result;
 
 		return res;
 

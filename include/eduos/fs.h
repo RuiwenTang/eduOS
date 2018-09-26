@@ -290,4 +290,6 @@ void list_fs(vfs_node_t* node, uint32_t depth);
 
 int initrd_init(void);
 
+void fat_init();
+
 #endif

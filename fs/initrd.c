@@ -34,6 +34,8 @@
 #include <asm/multiboot.h>
 #include <asm/processor.h>
 
+#include "fat/ff.h"
+
 static vfs_node_t initrd_root;
 
 #define INITRD_MAGIC_NUMBER     0x4711
@@ -560,4 +562,32 @@ next_file:
 	}
 
 	return 0;
+}
+
+
+void fat_init() {
+	FATFS* fs =(FATFS*) kmalloc(sizeof(FATFS));
+	DIR dir;
+	FRESULT ret = f_mount(fs, "", 1);
+	if (ret == FR_OK) {
+		kprintf("mount fat success!!!\n");
+		kprintf("fs type = %d\n", fs->fs_type);
+		kprintf("fs sector size = %d\n", fs->fsize);
+		ret = f_opendir(&dir, "/");
+		if (ret != FR_OK) {
+			kprintf("open dir failed!! res = %d\n", ret);
+			return;
+		}
+		for(;;) {
+			FILINFO fno;
+			ret = f_readdir(&dir, &fno);
+			if (ret != FR_OK || fno.fname[0] == 0) {
+				break;
+			}
+			kprintf("dir name = %s\n", fno.fname);
+		}
+	} else {
+		kprintf("mount fat failed!!!\n");
+		kprintf("Error mounting volume: %d\n", ret);
+	}
 }

@@ -161,8 +161,8 @@ static int eduos_init(void)
 	uart_init();
 #endif
 	initrd_init();
+	fat_init();
 
-	device_print_out();
 	return 0;
 }
 
@@ -189,7 +189,7 @@ int main(const char* real_code, uint32_t real_code_length)
 	
 	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
 	// create_user_task(NULL, "/bin/hello", argv1);
-	create_user_task(NULL, "/bin/hellocpp", argv2);
+	// create_user_task(NULL, "/bin/hellocpp", argv2);
 	//create_user_task(NULL, "/bin/jacobi", argv2);
 	// kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
 	memcpy((void*)0x7c00, real_code, real_code_length);

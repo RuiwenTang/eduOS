@@ -92,6 +92,6 @@ typedef struct {
 
 void ide_init(void);
 uint8_t ata_read_one(uint8_t *buf, uint32_t lba, device_t *dev);
-void ata_read(uint8_t *buf, uint32_t lba, uint32_t numsects, device_t *dev);
+uint8_t ata_read(uint8_t *buf, uint32_t lba, uint32_t numsects, void *dev);
 
 #endif
