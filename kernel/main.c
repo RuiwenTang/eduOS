@@ -162,6 +162,7 @@ static int eduos_init(void)
 #endif
 	initrd_init();
 
+	device_print_out();
 	return 0;
 }
 

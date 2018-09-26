@@ -7,6 +7,8 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
+#include <eduos/device.h>
+#include <asm/ide.h>
 #include "diskio.h"		/* FatFs lower layer API */
 
 /* Definitions of physical drive number for each drive */

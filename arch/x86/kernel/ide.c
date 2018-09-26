@@ -16,7 +16,7 @@
 #define ATA_PRIMARY_IRQ 14
 #define ATA_SECONDARY_IRQ 15
 
-#define ATA_BUFFER_SIZE 512
+#define ATA_BUFFER_SIZE 2048
 
 uint8_t ata_pm = 0; /* Primary master exists? */
 uint8_t ata_ps = 0; /* Primary Slave exists? */
@@ -221,7 +221,7 @@ void ata_probe()
 			str[i + 1] = ide_buf[ATA_IDENT_MODEL + i];
 		}
 		str[40] = 0;
-		dev.name = str;
+		memcpy(dev.name, str, 40);
 		dev.unique_id = 32;
 		dev.dev_type = DEVICE_BLOCK;
 		priv->drive = (ATA_PRIMARY << 1) | ATA_MASTER;
@@ -237,9 +237,9 @@ void ata_probe()
 		kprintf("Device: %s\n", str);
 		// kprintf("Device size = %d\n", priv->size * 512 / 1024 / 1024);
 	}
-	ide_identify(ATA_PRIMARY, ATA_SLAVE);
-	/*ide_identify(ATA_SECONDARY, ATA_MASTER);
-	ide_identify(ATA_SECONDARY, ATA_SLAVE);*/
+	// ide_identify(ATA_PRIMARY, ATA_SLAVE);
+	// ide_identify(ATA_SECONDARY, ATA_MASTER);
+	// ide_identify(ATA_SECONDARY, ATA_SLAVE);
 }
 
 void ide_init(void)

@@ -12,7 +12,7 @@ typedef enum __device_type {
 } device_type;
 
 typedef struct __device_t {
-	char *name;
+	char name[40];
 	uint32_t unique_id;
 	device_type dev_type;
 	// struct __fs_t *fs;
