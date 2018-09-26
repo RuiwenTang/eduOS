@@ -14,6 +14,53 @@
 #define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
 #define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
 
+static int RAM_disk_status() {
+	return 0;
+}
+
+static int MMC_disk_status() {
+	return 0;
+}
+
+static int USB_disk_status() {
+	return 0;
+}
+
+static int RAM_disk_initialize() {
+	return 0;
+}
+
+static int MMC_disk_initialize() {
+	return 0;
+}
+
+static int USB_disk_initialize() {
+	return 0;
+}
+
+static int RAM_disk_read(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
+
+static int MMC_disk_read(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
+
+static int USB_disk_read(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
+
+static int RAM_disk_write(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
+
+static int MMC_disk_write(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
+
+static int USB_disk_write(BYTE* buffer, DWORD sector, UINT count) {
+	return 0;
+}
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */

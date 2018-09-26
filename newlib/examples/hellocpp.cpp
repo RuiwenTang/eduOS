@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <vector>
+#include <string>
 
 class BaseClass {
 public:
@@ -28,5 +30,9 @@ int main(int argc, char const** argv) {
     BaseClass* p = new SubClass();
     delete p;
 
+    std::string str = "str";
+    std::vector<int> v;
+    v.push_back(1);
+    v.push_back(2);
     return 0;
 }

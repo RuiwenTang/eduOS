@@ -12,6 +12,7 @@
 #define ATA_PRIMARY_DCR_AS 0x3F6
 #define ATA_SECONDARY_DCR_AS 0x376
 
+#define ATA_IRQ_OFFSET 0x20
 #define ATA_PRIMARY_IRQ 14
 #define ATA_SECONDARY_IRQ 15
 
@@ -39,17 +40,18 @@ void ide_select_drive(uint8_t bus, uint8_t i)
 void ide_primary_irq(struct state *s)
 {
     kprintf("primary irq fired!!\n");
-	IRQ_START;
-	send_eoi(ATA_PRIMARY_IRQ);
-	IRQ_END;
+	// IRQ_START;
+	// send_eoi(ATA_PRIMARY_IRQ);
+	// IRQ_END;
+	return;
 }
 
 void ide_secondary_irq(struct state *s)
 {
     kprintf("second irq fired!!\n");
-	IRQ_START;
-	send_eoi(ATA_SECONDARY_IRQ);
-	IRQ_END;
+	// IRQ_START;
+	// send_eoi(ATA_SECONDARY_IRQ);
+	// IRQ_END;
 }
 
 uint8_t ide_identify(uint8_t bus, uint8_t drive)
@@ -243,7 +245,7 @@ void ata_probe()
 void ide_init(void)
 {
     memset(ide_buf, 0, ATA_BUFFER_SIZE);
-    irq_install_handler(ATA_PRIMARY_IRQ, ide_primary_irq);
-    irq_install_handler(ATA_SECONDARY_IRQ, ide_secondary_irq);
+    irq_install_handler(ATA_IRQ_OFFSET + ATA_PRIMARY_IRQ, ide_primary_irq);
+    irq_install_handler(ATA_IRQ_OFFSET + ATA_SECONDARY_IRQ, ide_secondary_irq);
     ata_probe();
 }

@@ -27,6 +27,9 @@
         "bitset": "c",
         "initializer_list": "c",
         "string_view": "c",
-        "utility": "c"
+        "utility": "c",
+        "__bit_reference": "c",
+        "__split_buffer": "c",
+        "vector": "c"
     }
 }
