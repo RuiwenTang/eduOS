@@ -39,7 +39,7 @@ all: hello jacobi demoservice hellocpp
 hellocpp: hellocpp.o
 	@echo [LD] $@
 	@echo $(LDFLAGS)
-	$Q$(CXX_FOR_TARGET) $(LDFLAGS) -lsupc++ $(CFLAGS) -o $@ $<
+	$Q$(CXX_FOR_TARGET) $(LDFLAGS) -lsupc++ -std=c++14 $(CFLAGS) -o $@ $<
 	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym
 	$Q$(OBJCOPY_FOR_TARGET) $(STRIP_DEBUG) $@
 	$Qchmod a-x $@.sym
