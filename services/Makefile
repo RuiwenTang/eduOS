@@ -45,3 +45,8 @@ default:
         READELF_FOR_TARGET=$(READELF_FOR_TARGET) \
 		-C $$module -f build.mk default; \
 	done
+
+
+clean:
+    $(shell rm -rf out)
+    

@@ -45,6 +45,7 @@ int main(int argc, char** argv)
 	printf("argc = %d\n", argc);
 	printf("argv[0] = %s\n", argv[0]);
 	MESSAGE msg;
+
 	msg.source = 123;
 	printf("addr = %lx\n", (uint32_t)&msg);
 	msg.type = 220;

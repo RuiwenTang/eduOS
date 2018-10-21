@@ -91,7 +91,14 @@ ssize_t syscall_handler(uint32_t sys_nr, ...)
 		break;
 	}
 	//TODO: Currently, we ignore file descriptors
-	case __NR_open:
+	case __NR_open: {
+		const char* fileName = va_arg(vl,const char*);
+		int flags = va_arg(vl, int);
+		int mode = va_arg(vl, int);
+		sys_write(0,fileName, 0);
+		ret = 0;
+		break;
+	}
 	case __NR_close:
 		ret = 0;
 		break;

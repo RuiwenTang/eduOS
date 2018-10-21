@@ -13,7 +13,6 @@ public:
     }
 
     virtual void hello() {
-
     }
 };
 
@@ -55,5 +54,6 @@ int main(int argc, char const** argv) {
     cb.push_back(4);
     cb.push_back(5);
     printf("size of cb = %d\n", cb.size());
+    FILE* f = fopen("/data/boot1", "rw");
     return 0;
 }
