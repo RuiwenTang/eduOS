@@ -6,15 +6,15 @@ LDFLAGS := -T link.ld
 
 %.o: %.c
 	@echo [CC] $@
-	$Q$(GCC_FOR_TARGET) -c $(CFLAGS) -o $@ $<
+	$Q$(GCC_FOR_TARGET) -c $(CFLAGS) $(LOCAL_C_FLAGS) -o $@ $<
 
 %.o: %.cpp
 	@echo [CXX] $@
-	$Q$(CXX_FOR_TARGET) -c $(CFLAGS) -o $@ $<
+	$Q$(CXX_FOR_TARGET) -c $(CFLAGS) $(LOCAL_CXX_FLAGS) -o $@ $<
 
 $(OUTDIR)/$(LOCAL_MODULE_NAME): $(objs)
 	@echo [LD] $(objs)
-	$Q$(CXX_FOR_TARGET) $(LDFLAGS) $(CFLAGS) $(objs) -o $@
+	$Q$(CXX_FOR_TARGET) $(LDFLAGS) $(CFLAGS) -lsupc++ $(objs) -o $@
 	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym
 	$Q$(OBJCOPY_FOR_TARGET) $(STRIP_DEBUG) $@
 	$Qchmod a-x $@.sym

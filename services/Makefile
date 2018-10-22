@@ -23,7 +23,7 @@ LDFLAGS = -T link.ld
 CFLAGS = -Wall -m32
 
 
-Modules= bar
+Modules= bar filemanager
 
 default:
 	@mkdir -p out
