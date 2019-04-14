@@ -9,5 +9,7 @@ int main(int argc, char const *argv[])
     
     circular_buffer cb{3};
     /* code */
+    printf("1\n");
+    printf("cb.size = %d\n", cb.size());
     return 0;
 }

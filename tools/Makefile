@@ -1,6 +1,6 @@
 MAKE = make
 CC = gcc
-CFLAGS = -O2 -Wall -m32
+CFLAGS = -O2 -Wall
 LDFLGAS =  
 EXECFILES = $(shell find ../services/out -perm -u+r+x -type f)
 

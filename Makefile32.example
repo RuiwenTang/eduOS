@@ -55,7 +55,7 @@ OUTPUT_FORMAT = -O elf32-i386
 CFLAGS_FOR_NEWLIB = -m$(BIT) $(STACKPROT)
 LDFLAGS_FOR_NEWLIB = -m$(BIT)
 NASMFLAGS_FOR_NEWLIB = -felf$(BIT)
-CFLAGS_FOR_TOOLS = -m$(BIT) -O2 -Wall
+CFLAGS_FOR_TOOLS = -O2 -Wall
 LDFLAGS_FOR_TOOLS =
 
 # Prettify output
@@ -67,7 +67,7 @@ endif
 
 default: all
 
-all: newlib tools $(NAME).elf
+all: newlib apps tools $(NAME).elf
 
 newlib:
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) \
@@ -90,6 +90,25 @@ newlib:
 tools:
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) CFLAGS="$(CFLAGS_FOR_TOOLS)" LDFLAGS="$(LDFLAGS_FOR_TOOLS)" -C tools
 
+apps:
+	@echo make all services
+	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) \
+                LDFLAGS="$(LDFLAGS_FOR_NEWLIB)" \
+                CFLAGS="$(CFLAGS_FOR_NEWLIB)" \
+                NASMFLAGS="$(NASMFLAGS_FOR_NEWLIB)" \
+                CC_FOR_TARGET=$(CC_FOR_TARGET) \
+                CXX_FOR_TARGET=$(CXX_FOR_TARGET) \
+                GCC_FOR_TARGET=$(GCC_FOR_TARGET) \
+                AR_FOR_TARGET=$(AR_FOR_TARGET) \
+                AS_FOR_TARGET=$(AS_FOR_TARGET) \
+                LD_FOR_TARGET=$(LD_FOR_TARGET) \
+                NM_FOR_TARGET=$(NM_FOR_TARGET) \
+                OBJDUMP_FOR_TARGET=$(OBJDUMP_FOR_TARGET) \
+                OBJCOPY_FOR_TARGET=$(OBJCOPY_FOR_TARGET) \
+                RANLIB_FOR_TARGET=$(RANLIB_FOR_TARGET) \
+                STRIP_FOR_TARGET=$(STRIP_FOR_TARGET) \
+				 -C services
+
 $(NAME).elf:
 	$Q$(LD_FOR_TARGET) $(LDFLAGS) -o $(NAME).elf $^
 	@echo [OBJCOPY] $(NAME).sym
@@ -101,6 +120,7 @@ clean:
 	$Q$(RM) $(NAME).elf $(NAME).sym *~
 	$Q$(MAKE) -C newlib clean
 	$Q$(MAKE) -C tools clean
+	$Q$(MAKE) -C services clean
 	@echo Cleaned.
 
 veryclean: clean

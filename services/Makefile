@@ -1,3 +1,4 @@
+TOPDIR = $(shell pwd)
 ARCH := 32
 
 CROSSCOMPREFIX := i686-eduos-
@@ -19,13 +20,15 @@ READELF_FOR_TARGET = $(CROSSCOMPREFIX)readelf
 TOPDIR := $(shell pwd)
 OUTDIR := $(TOPDIR)/out
 
-LDFLAGS = -T link.ld
+LDFLAGS := -T link.ld
 CFLAGS = -Wall -m32
 
+default: all
 
 Modules= bar filemanager
 
-default:
+all:
+	@echo make service modules
 	@mkdir -p out
 	@for module in $(Modules); do \
 		make TOPDIR=$(TOPDIR) \
@@ -48,5 +51,8 @@ default:
 
 
 clean:
-    $(shell rm -rf out)
+	@echo Cleaning tools
+	$(shell rm -rf out)
+
+.PHONY: default
     

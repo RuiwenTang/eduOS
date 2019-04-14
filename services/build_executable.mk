@@ -14,7 +14,7 @@ LDFLAGS := -T link.ld
 
 $(OUTDIR)/$(LOCAL_MODULE_NAME): $(objs)
 	@echo [LD] $(objs)
-	$Q$(CXX_FOR_TARGET) $(LDFLAGS) $(CFLAGS) -lsupc++ $(objs) -o $@
+	$Q$(CXX_FOR_TARGET) -T link.ld $(LDFLAGS) $(CFLAGS) -lsupc++ $(objs) -o $@
 	$Q$(OBJCOPY_FOR_TARGET) $(KEEP_DEBUG) $@ $@.sym
 	$Q$(OBJCOPY_FOR_TARGET) $(STRIP_DEBUG) $@
 	$Qchmod a-x $@.sym
