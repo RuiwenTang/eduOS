@@ -44,19 +44,19 @@
 /* .text is used instead of .section .text so it works with arm-aout too.  */
 	.text
 	.syntax unified
-#ifdef THUMB_V7_V6M
+#ifdef PREFER_THUMB
 	.thumb
 .macro FUNC_START name
 	.global \name
 	.thumb_func
 \name:
-.endm	
+.endm
 #else
 	.code 32
 .macro FUNC_START name
-	.global	\name
+	.global \name
 \name:
-.endm	
+.endm
 #endif
 
 .macro indirect_call reg
@@ -68,8 +68,10 @@
 #endif
 .endm
 
+/*******************************************************************************
+* Main library startup code.
+*******************************************************************************/
 	.align 	0
-
 	FUNC_START	_mainCRTStartup
 	FUNC_START	_start
 #if defined(__ELF__) && !defined(__USING_SJLJ_EXCEPTIONS__)
@@ -85,7 +87,7 @@
 
 	/*  Stack limit is at end of data.  */
 	/*  Allow slop for stack overflow handling and small frames.  */
-#ifdef __ARM_ARCH_6M__
+#ifdef THUMB1_ONLY
 	ldr	r0, .LC2
 	adds	r0, #128
 	adds	r0, #128
@@ -99,7 +101,7 @@
 	/*  Issue Angel SWI to read stack info.  */
 	movs	r0, #AngelSWI_Reason_HeapInfo
 	adr	r1, .LC0	/*  Point at ptr to 4 words to receive data.  */
-#ifdef THUMB_V7M_V6M
+#ifdef THUMB_VXM
 	bkpt	AngelSWI
 #elif defined(__thumb2__)
 	/*  We are in thumb mode for startup on armv7 architectures.  */
@@ -137,7 +139,7 @@
 	beq	.LC27
 
 	/*  Allow slop for stack overflow handling and small frames.  */
-#ifdef __ARM_ARCH_6M__
+#ifdef THUMB1_ONLY
 	adds	r2, #128
 	adds	r2, #128
 	mov	sl, r2
@@ -164,7 +166,7 @@
 #ifdef __thumb2__
 	it	eq
 #endif	
-#ifdef __ARM_ARCH_6M__
+#ifdef THUMB1_ONLY
 	bne	.LC28
 	ldr	r3, .LC0
 .LC28:
@@ -176,7 +178,7 @@
 		 have somehow missed it below (in which case it gets the same
 		 value as FIQ - not ideal, but better than nothing).  */
 	mov	sp, r3
-#ifdef THUMB_V7_V6M
+#ifdef PREFER_THUMB
 	/* XXX Fill in stack assignments for interrupt modes.  */
 #else
 	mrs	r2, CPSR
@@ -219,7 +221,7 @@
 	   this default 64k is enough for the program being executed.
 	   However, it ensures that this simple crt0 world will not
 	   immediately cause an overflow event:  */
-#ifdef __ARM_ARCH_6M__
+#ifdef THUMB1_ONLY
 	movs	r2, #64
 	lsls	r2, r2, #10
 	subs	r2, r3, r2
@@ -239,7 +241,7 @@
 	subs	a3, a3, a1		/* Third arg: length of block.  */
 	
 
-#if defined(__thumb__) && !defined(THUMB_V7_V6M)
+#if __thumb__ && !defined(PREFER_THUMB)
 	/* Enter Thumb mode...  */
 	add	a4, pc, #1	/* Get the address of the Thumb block.  */
 	bx	a4		/* Go there and start Thumb decoding.  */
@@ -278,7 +280,7 @@ __change_mode:
 #else
 	movs	r0, #AngelSWI_Reason_GetCmdLine
 	adr	r1, .LC30	/* Space for command line.  */
-#ifdef THUMB_V7M_V6M
+#ifdef THUMB_VXM
 	bkpt	AngelSWI
 #else
  	AngelSWIAsm	AngelSWI
@@ -399,12 +401,12 @@ __change_mode:
 	bl	FUNCTION (_init)
 	movs	r0, r4
 	movs	r1, r5
-#endif	
+#endif
 	bl	FUNCTION (main)
 
 	bl	FUNCTION (exit)		/* Should not return.  */
 
-#if defined(__thumb__) && !defined(THUMB_V7_V6M)
+#if __thumb__ && !defined(PREFER_THUMB)
 	/* Come out of Thumb mode.  This code should be redundant.  */
 	mov	a4, pc
 	bx	a4
@@ -420,7 +422,7 @@ change_back:
 #endif
 	
 	/* For Thumb, constants must be after the code since only 
-	   positive offsets are supported for PC relative addresses.  */	
+	   positive offsets are supported for PC relative addresses.  */
 	.align 0
 .LC0:
 #ifdef ARM_RDI_MONITOR
@@ -430,7 +432,7 @@ change_back:
 	/* Changes by toralf: Provide alternative "stack" variable whose value
 	   may be defined externally; .Lstack will be used instead of .LC0 if
 	   it points to a non-0 value. Also set up references to "hooks" that
-           may be used by the application to provide additional init code.  */	
+           may be used by the application to provide additional init code.  */
 #ifdef __pe__
 	.word	0x800000
 #else
@@ -449,7 +451,7 @@ change_back:
 	   runtime (meaning "ignore setting") for the variables, when the user
 	   does not provide the symbols. (The linker uses a weak symbol if,
 	   and only if, a normal version of the same symbol isn't provided
-	   e.g. by a linker script or another object file).  */	
+	   e.g. by a linker script or another object file.)  */	
 
 	.weak __stack
 	.weak FUNCTION (hardware_init_hook) 

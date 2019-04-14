@@ -14,7 +14,7 @@
  *  OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
  *  SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  *
- *  $Id: sched.h,v 1.2 2010/04/01 18:33:33 jjohnstn Exp $
+ *  $Id$
  */
 
 #ifndef _SCHED_H_
@@ -89,6 +89,10 @@ int sched_rr_get_interval(
 int sched_yield( void );
 
 #endif /* _POSIX_THREADS or _POSIX_PRIORITY_SCHEDULING */
+
+#if __GNU_VISIBLE
+int sched_getcpu(void);
+#endif
 
 #ifdef __cplusplus
 }

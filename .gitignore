@@ -11,3 +11,4 @@ newlib/x86/
 tools/initrd.img
 tools/make_initrd
 .DS_Store
+.vscode/*

@@ -52,8 +52,8 @@ STRIP_DEBUG = --strip-debug
 KEEP_DEBUG = --only-keep-debug
 OUTPUT_FORMAT = -O elf32-i386
 
-CFLAGS_FOR_NEWLIB = -m$(BIT) $(STACKPROT)
-LDFLAGS_FOR_NEWLIB = -m$(BIT)
+CFLAGS_FOR_NEWLIB =
+LDFLAGS_FOR_NEWLIB =
 NASMFLAGS_FOR_NEWLIB = -felf$(BIT)
 CFLAGS_FOR_TOOLS = -O2 -Wall
 LDFLAGS_FOR_TOOLS =
@@ -67,7 +67,7 @@ endif
 
 default: all
 
-all: newlib apps tools $(NAME).elf
+all: newlib app tools $(NAME).elf
 
 newlib:
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) \
@@ -90,7 +90,7 @@ newlib:
 tools:
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) CFLAGS="$(CFLAGS_FOR_TOOLS)" LDFLAGS="$(LDFLAGS_FOR_TOOLS)" -C tools
 
-apps:
+app:
 	@echo make all services
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) \
                 LDFLAGS="$(LDFLAGS_FOR_NEWLIB)" \
@@ -107,7 +107,7 @@ apps:
                 OBJCOPY_FOR_TARGET=$(OBJCOPY_FOR_TARGET) \
                 RANLIB_FOR_TARGET=$(RANLIB_FOR_TARGET) \
                 STRIP_FOR_TARGET=$(STRIP_FOR_TARGET) \
-				 -C services
+				 -C apps
 
 $(NAME).elf:
 	$Q$(LD_FOR_TARGET) $(LDFLAGS) -o $(NAME).elf $^
@@ -120,7 +120,7 @@ clean:
 	$Q$(RM) $(NAME).elf $(NAME).sym *~
 	$Q$(MAKE) -C newlib clean
 	$Q$(MAKE) -C tools clean
-	$Q$(MAKE) -C services clean
+	$Q$(MAKE) -C apps clean
 	@echo Cleaned.
 
 veryclean: clean

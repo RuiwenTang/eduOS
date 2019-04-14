@@ -189,14 +189,14 @@ int main(const char* real_code, uint32_t real_code_length)
 	
 	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
 	// create_user_task(NULL, "/bin/hello", argv1);
-	create_user_task(NULL, "/bin/bar", argv2);
-	create_user_task(NULL, "/bin/filemanager", argv2);
+	// create_user_task(NULL, "/bin/bar", argv2);
+	// create_user_task(NULL, "/bin/filemanager", argv2);
 	// kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
 	memcpy((void*)0x7c00, real_code, real_code_length);
 
-	// int ret = back_to_rmode();
+	int ret = back_to_rmode();
 
-	// kprintf("Back from real mode ret = %d\n", ret);
+	kprintf("Back from real mode ret = %d\n", ret);
 #if 0
 	kputs("Filesystem:\n");
 	list_fs(fs_root, 1);
