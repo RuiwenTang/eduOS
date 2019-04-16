@@ -29,13 +29,13 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
-int
-_DEFUN (_symlink, (path1, path2),
-        const char *path1 _AND
+int _symlink (
+        const char *path1 ,
         const char *path2)
 {
   errno = ENOSYS;
@@ -43,3 +43,12 @@ _DEFUN (_symlink, (path1, path2),
 }
 
 stub_warning(_symlink)
+
+int _symlink_r (
+        struct _reent* ptr,
+        const char *path1 ,
+        const char *path2)
+{
+  ptr->_errno = ENOSYS;
+  return -1;
+}

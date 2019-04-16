@@ -33,7 +33,7 @@
 #include <errno.h>
 
 #define CONFIG_X86_32
-#include <rpc/message.h>
+#include <sys/message.h>
 
 #undef errno
 extern int errno;

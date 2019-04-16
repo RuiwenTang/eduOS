@@ -168,6 +168,13 @@ void NORETURN leave_kernel_task(void);
  */
 task_t* get_task(int pid);
 
+/**
+ * @brief Get current task
+ * @return
+ * - task_t* pointer of current task_t
+ */
+task_t* get_current_task();
+
 #ifdef __cplusplus
 }
 #endif

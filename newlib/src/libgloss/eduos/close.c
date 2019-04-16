@@ -29,13 +29,13 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (close, (fildes),
+int _close (
         int fildes)
 {
 	int ret;
@@ -43,6 +43,21 @@ _DEFUN (close, (fildes),
         ret = SYSCALL1(__NR_close, fildes);
 	if (ret < 0) {
 		errno = -ret;
+		ret = -1;
+	}
+
+        return ret;
+}
+
+int _close_r (
+	struct _reent* ptr,
+        int fildes)
+{
+	int ret;
+
+        ret = SYSCALL1(__NR_close, fildes);
+	if (ret < 0) {
+		ptr->_errno = -ret;
 		ret = -1;
 	}
 

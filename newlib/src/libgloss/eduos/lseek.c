@@ -29,15 +29,15 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (_lseek, (file, ptr, dir),
-        int   file  _AND
-        int   ptr   _AND
+int _lseek (
+        int   file ,
+        int   ptr  ,
         int   dir)
 {
 	int ret;	
@@ -45,6 +45,23 @@ _DEFUN (_lseek, (file, ptr, dir),
 	ret = SYSCALL3(__NR_lseek, file, ptr, dir);
 	if (ret < 0) {
 		errno = -ret;
+		ret = -1;
+	}
+
+	return ret;
+}
+
+_off_t _lseek_r (
+		struct _reent* r_ptr,
+        int   file ,
+        _off_t   ptr  ,
+        int   dir)
+{
+	int ret;	
+
+	ret = SYSCALL3(__NR_lseek, file, ptr, dir);
+	if (ret < 0) {
+		r_ptr->_errno = -ret;
 		ret = -1;
 	}
 

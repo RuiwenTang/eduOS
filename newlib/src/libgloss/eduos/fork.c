@@ -29,14 +29,13 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (_fork, (),
-        _NOARGS)
+int _fork()
 {
 	int ret;
 
@@ -44,6 +43,19 @@ _DEFUN (_fork, (),
 	ret = SYSCALL0(__NR_fork);
 	if (ret < 0) {
 		errno = -ret;
+		ret = -1;
+	}
+
+	return ret;
+}
+
+int _fork_r (struct _reent *ptr) {
+	int ret;
+
+	/* create a child process */
+	ret = SYSCALL0(__NR_fork);
+	if (ret < 0) {
+		ptr->_errno = -ret;
 		ret = -1;
 	}
 

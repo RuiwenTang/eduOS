@@ -29,22 +29,28 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (_getpid, (),
-        _NOARGS)
-{
+int _getpid () {
 	int ret;
-
-        ret = SYSCALL0(__NR_getpid);
+	ret = SYSCALL0(__NR_getpid);
 	if (ret < 0) {
 		errno = -ret;
 		ret = -1;
 	}
+	return ret;
+}
 
-        return ret;
+int _getpid_r (struct _reent *ptr) {
+	int ret;
+	ret = SYSCALL0(__NR_getpid);
+	if (ret < 0) {
+		ptr->_errno = -ret;
+		ret = -1;
+	}
+	return ret;
 }

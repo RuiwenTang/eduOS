@@ -29,13 +29,13 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (dup, (fildes),
+int _dup (
         int fildes)
 {
 	int ret;
@@ -47,4 +47,16 @@ _DEFUN (dup, (fildes),
 	}
 
         return ret;
+}
+
+int _dup_r (struct _reent *ptr, int fildes) {
+	int ret;
+	
+	ret = SYSCALL1(__NR_dup, fildes);
+	if (ret < 0) {
+		ptr->_errno = -ret;
+		ret = -1;
+	}
+
+	return ret;
 }

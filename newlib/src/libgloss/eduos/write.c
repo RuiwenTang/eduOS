@@ -29,15 +29,15 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (write, (file, ptr, len),
-        int   file  _AND
-        char *ptr   _AND
+int _write(
+        int   file,
+        char *ptr ,
         int   len)
 {
 	int ret; 
@@ -45,6 +45,23 @@ _DEFUN (write, (file, ptr, len),
         ret = SYSCALL3(__NR_write, file, ptr, len); 
 	if (ret < 0) {
 		errno = -ret;
+		ret = -1;
+	}
+
+	return ret;
+}
+
+_ssize_t _write_r(
+		struct _reent* r_ptr,
+        int   file,
+        const void *ptr ,
+        size_t   len)
+{
+	int ret; 
+
+    ret = SYSCALL3(__NR_write, file, ptr, len); 
+	if (ret < 0) {
+		r_ptr->_errno = -ret;
 		ret = -1;
 	}
 

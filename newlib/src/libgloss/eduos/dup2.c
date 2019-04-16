@@ -34,9 +34,8 @@ extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (dup2, (fildes, fildes2),
-        int fildes _AND
+int _dup2 (
+        int fildes ,
 	int fildes2)
 {
 	int ret;
@@ -48,4 +47,16 @@ _DEFUN (dup2, (fildes, fildes2),
 	}
 
         return ret;
+}
+
+int _dup2_r (struct _reent *ptr, int fildes, int fildes2) {
+	int ret;
+	
+	ret = SYSCALL2(__NR_dup, fildes, fildes2);
+	if (ret < 0) {
+		ptr->_errno = -ret;
+		ret = -1;
+	}
+
+	return ret;
 }

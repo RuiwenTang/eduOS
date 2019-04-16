@@ -31,15 +31,15 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
 struct timeval;
 
-int
-_DEFUN (_gettimeofday, (ptimeval, ptimezone),
-        struct timeval  *ptimeval  _AND
+int _gettimeofday (
+        struct timeval  *ptimeval,
         void *ptimezone)
 {
   errno = ENOSYS;
@@ -47,3 +47,11 @@ _DEFUN (_gettimeofday, (ptimeval, ptimezone),
 }
 
 stub_warning(_gettimeofday)
+
+int _gettimeofday_r (struct _reent* ptr
+        , struct timeval  *ptimeval
+        , void *ptimezone)
+{
+  ptr->_errno = ENOSYS;
+  return -1;
+}

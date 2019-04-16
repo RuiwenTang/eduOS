@@ -35,14 +35,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (stat, (file, st),
-        const char  *file _AND
+int _stat (
+        const char  *file,
         struct stat *st)
 {
 	int ret;
@@ -55,6 +55,27 @@ _DEFUN (stat, (file, st),
 	ret = SYSCALL2(__NR_stat, file, st);
 	if (ret < 0) {
 		errno = -ret;
+		return -1;
+	}
+	
+	return 0;
+}
+
+int _stat_r (
+		struct _reent* ptr,
+        const char  *file,
+        struct stat *st)
+{
+	int ret;
+
+	if (!file && ! st) {
+		ptr->_errno = EINVAL;
+		return -1;
+	}
+
+	ret = SYSCALL2(__NR_stat, file, st);
+	if (ret < 0) {
+		ptr->_errno = -ret;
 		return -1;
 	}
 	

@@ -96,6 +96,7 @@ monstartup(lowpc, highpc)
 {
   int		monsize;
   char		*buffer;
+  
   register int	o;
 
 	/*

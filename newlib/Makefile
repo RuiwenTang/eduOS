@@ -20,9 +20,6 @@ MKDIR = mkdir
 TMP = $(TOPDIR)/tmp
 OPT = --disable-shared \
 	--disable-libstdcxx \
-	--disable-multilib \
-	--disable-newlib-multithread \
-	--disable-newlib-reent-small \
 	CC_FOR_TARGET=$(CC_FOR_TARGET) \
     CXX_FOR_TARGET=$(CXX_FOR_TARGET) \
     GCC_FOR_TARGET=$(GCC_FOR_TARGET) \

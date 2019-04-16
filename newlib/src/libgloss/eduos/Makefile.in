@@ -46,7 +46,7 @@ CC = @CC@
 
 AS = @AS@
 NASM = @NASM@
-#NASMFLAGS = -felf32
+NASMFLAGS = -felf32
 AR = @AR@
 LD = @LD@
 RANLIB = @RANLIB@

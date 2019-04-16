@@ -416,6 +416,14 @@ esac
 # THIS TABLE IS ALPHA SORTED.  KEEP IT THAT WAY.
 
 case "${host}" in
+	i[34567]86-eduos-elf*)
+	newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED -m32"
+	sys_dir=
+	;;
+	x86_64-eduos-elf*)
+	newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED"
+	sys_dir=
+	;;
   *-*-cygwin*)
 	posix_dir=posix
 	stdio64_dir=stdio64

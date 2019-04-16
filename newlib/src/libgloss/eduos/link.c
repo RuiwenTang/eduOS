@@ -29,15 +29,24 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
-int
-_DEFUN (_link, (existing, new),
-        char *existing _AND
+int _link (
+        char *existing ,
         char *new)
 {
 	errno = EMLINK;
+	return -1;
+}
+
+int _link_r (
+        struct _reent* ptr,
+        const char *existing ,
+        const char *new)
+{
+	ptr->_errno = EMLINK;
 	return -1;
 }

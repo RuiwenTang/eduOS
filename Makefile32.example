@@ -52,7 +52,7 @@ STRIP_DEBUG = --strip-debug
 KEEP_DEBUG = --only-keep-debug
 OUTPUT_FORMAT = -O elf32-i386
 
-CFLAGS_FOR_NEWLIB =
+CFLAGS_FOR_NEWLIB = -m32
 LDFLAGS_FOR_NEWLIB =
 NASMFLAGS_FOR_NEWLIB = -felf$(BIT)
 CFLAGS_FOR_TOOLS = -O2 -Wall
@@ -72,7 +72,7 @@ all: newlib app tools $(NAME).elf
 newlib:
 	$Q$(MAKE) ARCH=$(ARCH) BIT=$(BIT) \
                 LDFLAGS="$(LDFLAGS_FOR_NEWLIB)" \
-                CFLAGS="$(CFLAGS_FOR_NEWLIB)" \
+                CFLAGS_FOR_TARGET="$(CFLAGS_FOR_NEWLIB)" \
                 NASMFLAGS="$(NASMFLAGS_FOR_NEWLIB)" \
                 CC_FOR_TARGET=$(CC_FOR_TARGET) \
                 CXX_FOR_TARGET=$(CXX_FOR_TARGET) \
@@ -130,7 +130,7 @@ veryclean: clean
 	@echo Very cleaned
 
 qemu: all
-	$(QEMU) $(QEMUFLAGS) -kernel $(NAME).elf -initrd tools/initrd.img -hda ../disk.img
+	$(QEMU) $(QEMUFLAGS) -kernel $(NAME).elf -initrd tools/initrd.img
 
 uart: all
 	$(QEMU) $(QEMUFLAGS) $(QEMUSERIALFLAGS) -kernel $(NAME).elf -append uart=io:0xc110 -initrd tools/initrd.img

@@ -29,12 +29,19 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
-int
-_DEFUN (isatty, (file),
+int _isatty (
+        int file)
+{
+	return (file < 3);
+}
+
+int _isatty_r (
+        struct _reent* ptr,
         int file)
 {
 	return (file < 3);

@@ -29,15 +29,16 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
 int
-_DEFUN (_open, (file, flags, mode),
-        char *file  _AND
-        int   flags _AND
+_open (
+        char *file,
+        int   flags,
         int   mode)
 {
 	int ret;
@@ -45,6 +46,22 @@ _DEFUN (_open, (file, flags, mode),
         ret = SYSCALL3(__NR_open, file, flags, mode);
 	if (ret < 0) {
 		errno = -ret;
+		ret = -1;
+	}
+
+        return ret;
+}
+
+int _open_r (struct _reent* ptr,
+        const char *file,
+        int   flags,
+        int   mode)
+{
+        int ret;
+
+        ret = SYSCALL3(__NR_open, file, flags, mode);
+	if (ret < 0) {
+		ptr->_errno = -ret;
 		ret = -1;
 	}
 

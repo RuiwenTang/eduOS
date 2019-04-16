@@ -29,11 +29,11 @@
 #include "syscall.h"
 #include <_ansi.h>
 #include <_syslist.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 
-_VOID
-_DEFUN (_exit, (rc),
+void _exit (
 	int rc)
 {
 	int ret;
@@ -42,6 +42,22 @@ _DEFUN (_exit, (rc),
 	ret = SYSCALL1(__NR_exit, rc); 
 	if (ret < 0)
 		errno = -ret;
+
+	/* Convince GCC that this function never returns.  */
+	for (;;)
+		;
+}
+
+void _exit_r (
+	struct _reent* ptr,
+	int rc)
+{
+	int ret;
+
+	/* task exit */
+	ret = SYSCALL1(__NR_exit, rc); 
+	if (ret < 0)
+		ptr->_errno = -ret;
 
 	/* Convince GCC that this function never returns.  */
 	for (;;)

@@ -29,15 +29,21 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
-int
-_DEFUN (_kill, (pid, sig),
-        int pid  _AND
+int _kill (
+        int pid,
         int sig)
 {
 	errno = EINVAL;
 	return -1;
+}
+
+int _kill_r (struct _reent* ptr, int pid, int sig) {
+
+        ptr->_errno = EINVAL;
+        return -1;
 }

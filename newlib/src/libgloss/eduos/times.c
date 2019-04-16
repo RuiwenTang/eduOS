@@ -30,12 +30,12 @@
 #include <_syslist.h>
 #include <sys/times.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "syscall.h"
 
-clock_t
-_DEFUN (_times, (buf),
+clock_t _times(
         struct tms *buf)
 {
 	clock_t clock = 0;
@@ -44,6 +44,20 @@ _DEFUN (_times, (buf),
 	ret = SYSCALL2(__NR_times, buf, &clock);
 	if (ret < 0) {
 		errno = -ret;
+		return (clock_t) -1;
+	}
+
+	return clock;
+}
+
+clock_t _times_r (struct _reent* ptr, struct tms* buf)
+{
+	clock_t clock = 0;
+	int ret;
+
+	ret = SYSCALL2(__NR_times, buf, &clock);
+	if (ret < 0) {
+		ptr->_errno = -ret;
 		return (clock_t) -1;
 	}
 

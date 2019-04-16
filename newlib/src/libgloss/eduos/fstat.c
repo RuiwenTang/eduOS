@@ -31,16 +31,22 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <reent.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 #include "syscall.h"
 
-int
-_DEFUN (fstat, (fildes, st),
-        int          fildes _AND
+int _fstat (
+        int fildes,
         struct stat *st)
 {
 	st->st_mode = S_IFCHR;
 	return 0;
+}
+
+int _fstat_r (struct _reent *ptr, int fildes, struct stat * st) {
+
+        st->st_mode = S_IFCHR;
+        return 0;
 }

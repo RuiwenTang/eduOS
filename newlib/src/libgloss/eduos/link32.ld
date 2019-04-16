@@ -1,5 +1,4 @@
 OUTPUT_FORMAT(elf32-i386)
-STARTUP(crt0.o)
 ENTRY(_start)
 GROUP(-lc -lgloss)
 SEARCH_DIR(.)

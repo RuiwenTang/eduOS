@@ -127,6 +127,10 @@ ssize_t syscall_handler(uint32_t sys_nr, ...)
 		ret = do_msg_recv(source, current_task->id, (MESSAGE*)msg);
 		break;
 	}
+	case __NR_getpid: {
+		ret = get_current_task()->id;
+		break;
+	}
 	default:
 		kprintf("invalid system call: %u\n", sys_nr);
 		ret = -ENOSYS;

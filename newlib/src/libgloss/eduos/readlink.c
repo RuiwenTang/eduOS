@@ -29,15 +29,15 @@
 #include <_ansi.h>
 #include <_syslist.h>
 #include <errno.h>
+#include <reent.h>
 #include <sys/types.h>
 #undef errno
 extern int errno;
 #include "warning.h"
 
-int
-_DEFUN (_readlink, (path, buf, bufsize),
-        const char *path _AND
-        char *buf _AND
+int _readlink (
+        const char *path ,
+        char *buf ,
         size_t bufsize)
 {
   errno = ENOSYS;
@@ -45,3 +45,13 @@ _DEFUN (_readlink, (path, buf, bufsize),
 }
 
 stub_warning(_readlink)
+
+int _readlink_r (
+        struct _reent* ptr,
+        const char *path ,
+        char *buf ,
+        size_t bufsize)
+{
+  ptr->_errno = ENOSYS;
+  return -1;
+}
