@@ -244,6 +244,7 @@ m4trace:configure.in:24: -1- m4_pattern_allow([^STRIP$])
 m4trace:configure.in:24: -1- AC_SUBST([INSTALL_STRIP_PROGRAM])
 m4trace:configure.in:24: -1- AC_SUBST_TRACE([INSTALL_STRIP_PROGRAM])
 m4trace:configure.in:24: -1- m4_pattern_allow([^INSTALL_STRIP_PROGRAM$])
+m4trace:configure.in:24: -1- AM_PROG_MKDIR_P
 m4trace:configure.in:24: -1- AC_SUBST([mkdir_p])
 m4trace:configure.in:24: -1- AC_SUBST_TRACE([mkdir_p])
 m4trace:configure.in:24: -1- m4_pattern_allow([^mkdir_p$])

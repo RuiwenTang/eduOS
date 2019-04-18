@@ -1,1 +1,1 @@
-include Makefile32.example
+include Makefile64.example

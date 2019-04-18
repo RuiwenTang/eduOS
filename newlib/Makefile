@@ -18,8 +18,9 @@ RM = rm -rf
 CD = cd
 MKDIR = mkdir
 TMP = $(TOPDIR)/tmp
-OPT = --disable-shared \
-	--disable-libstdcxx \
+OPT = --enable-shared \
+	--enable-threads \
+	--enable-newlib-multithread \
 	CC_FOR_TARGET=$(CC_FOR_TARGET) \
     CXX_FOR_TARGET=$(CXX_FOR_TARGET) \
     GCC_FOR_TARGET=$(GCC_FOR_TARGET) \

@@ -56,6 +56,7 @@ ifneq (,$(findstring -m32,$(CFLAGS)))
 BIT = 32
 else
 BIT = 64
+NASMFLAGS = -felf64
 endif
 
 OBJDUMP = `if [ -f ${objroot}/../binutils/objdump ] ; \

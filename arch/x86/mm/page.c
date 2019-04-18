@@ -310,13 +310,16 @@ default_handler:
 		(s->error & 0x1) ? "protection" : "not present",
 		(s->error & 0x8) ? "reserved bit" : "\b");
 #endif
-
+#ifdef CONFIG_X86_32
 	if (s->eip >= 0x40000000) {
 		// user task page fault
 		sys_exit(9);
 	} else {
 		while(1) HALT;
 	}
+#elif defined(CONFIG_x86_64)
+	while(1) HALT;
+#endif
 }
 
 int page_init(void)

@@ -3,11 +3,11 @@ TOPDIR = $(shell pwd)
 ARCH = x86
 BIT = 64
 NAME = eduos
-KERNDIRS = libkern kernel mm fs arch/$(ARCH)/kernel arch/$(ARCH)/mm
+KERNDIRS = libkern kernel mm fs drivers arch/$(ARCH)/kernel arch/$(ARCH)/mm
 SUBDIRS = $(KERNDIRS)
 
 # Set your own cross compiler tool chain prefix here
-CROSSCOMPREFIX =
+CROSSCOMPREFIX = x86_64-eduos-
 STACKPROT = -fno-stack-protector
 
 CC_FOR_TARGET = $(CROSSCOMPREFIX)gcc
@@ -110,7 +110,7 @@ veryclean: clean
 	@echo Very cleaned
 
 qemu: all
-	$(QEMU) $(QEMUFLAGS) -kernel $(NAME).elf -initrd tools/initrd.img
+	$(QEMU) $(QEMUFLAGS) -kernel $(NAME).elf -initrd tools/initrd.img -hda ../disk.img -m 512M
 
 uart: all
 	$(QEMU) $(QEMUFLAGS) $(QEMUSERIALFLAGS) -kernel $(NAME).elf -append uart=io:0xc110 -initrd tools/initrd.img
@@ -148,6 +148,10 @@ include/eduos/config.inc: include/eduos/config.h
 %.o : %.S
 	@echo [GCC-ASM] $@
 	$Q$(CC_FOR_TARGET) $(CFLAGS) -c -o $@ $<
+
+%.o : %.asm include/eduos/config.inc arch/x86/kernel/real86.bins
+	@echo [ASM] $@
+	$Q$(NASM) $(NASMFLAGS) -o $@ $<
 
 .PHONY: default all clean emu gdb newlib tools
 

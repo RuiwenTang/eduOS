@@ -111,7 +111,7 @@ void gdt_install(void)
 #elif defined(CONFIG_X86_64)
 	gran_cs = GDT_FLAG_64_BIT;
 	gran_ds = 0;
-	limit = 0;
+	limit = 0xFFFFFFFF;
 #else
 #error invalid mode
 #endif
@@ -170,11 +170,13 @@ void gdt_install(void)
 	task_state_segment.ss = task_state_segment.ds = task_state_segment.es = task_state_segment.fs = task_state_segment.gs = 0x13;
 	gdt_set_gate(num++, (unsigned long) (&task_state_segment), sizeof(tss_t)-1,
 			GDT_FLAG_PRESENT | GDT_FLAG_TSS | GDT_FLAG_RING0, gran_ds);
-#endif
 
 	/* make a 16 bit data and code segment */
 	gdt_set_gate(num++, 0x0, 0xffff,  GDT_FLAG_DATASEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT | GDT_FLAG_SEGMENT, GDT_FLAG_16_BIT);
 	gdt_set_gate(num++, 0x0, 0xffff,  GDT_FLAG_CODESEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT | GDT_FLAG_SEGMENT, GDT_FLAG_16_BIT);
+#endif
+
+	
 
 	/* Flush out the old GDT and install the new changes! */
 	gdt_flush();

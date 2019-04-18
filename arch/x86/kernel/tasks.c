@@ -303,7 +303,7 @@ static int load_task(load_args_t* largs)
 		return -ENOMEM;
 	}
 
-	curr_task->heap->flags = VMA_HEAP|VMA_USER;
+	curr_task->heap->flags = VMA_HEAP|VMA_USER|VMA_EXECUTE;
 	curr_task->heap->start = PAGE_FLOOR(heap);
 	curr_task->heap->end = PAGE_FLOOR(heap);
 

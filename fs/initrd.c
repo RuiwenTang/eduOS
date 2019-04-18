@@ -37,6 +37,7 @@
 #include "fat/ff.h"
 
 static vfs_node_t initrd_root;
+static vfs_node_t fat_root;
 
 #define INITRD_MAGIC_NUMBER     0x4711
 
@@ -567,6 +568,7 @@ next_file:
 
 void fat_init() {
 	FATFS* fs =(FATFS*) kmalloc(sizeof(FATFS));
+	memset(&fat_root, 0x00, sizeof(vfs_node_t));
 	DIR dir;
 	FRESULT ret = f_mount(fs, "", 1);
 	if (ret == FR_OK) {
@@ -578,6 +580,8 @@ void fat_init() {
 			kprintf("open dir failed!! res = %d\n", ret);
 			return;
 		}
+		fat_root.type = FS_DIRECTORY;
+		fs_root = &fat_root;
 		for(;;) {
 			FILINFO fno;
 			ret = f_readdir(&dir, &fno);
@@ -585,6 +589,7 @@ void fat_init() {
 				break;
 			}
 			kprintf("dir name = %s\n", fno.fname);
+			mkdir_fs(fs_root, fno.fname);
 		}
 	} else {
 		kprintf("mount fat failed!!!\n");

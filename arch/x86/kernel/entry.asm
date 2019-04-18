@@ -743,7 +743,7 @@ back_to_pmode:
 
 global back_to_rmode
 back_to_rmode:
-    jmp dword 0x38 : 0x7c00
+    ;jmp dword 0x38 : 0x7c00
 
 ; add some hints to the ELF file
 SECTION .note.GNU-stack noalloc noexec nowrite progbits

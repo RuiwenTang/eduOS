@@ -130,16 +130,16 @@ static int foo(void* arg)
 	for(i=0; i<2; i++) {
 		kprintf("hello from %s\n", (char*) arg);
 	}
-	MESSAGE msg;
-	memset(&msg, 0, sizeof(MESSAGE));
-	kprintf("before foo receive msg\n");
-	msg.source = 0x1234;
-	int ret = msg_recv(MSG_TARGET_ANY, &msg);
-	kprintf("foo receive a message ret = %d | from src = %d | with type = %d \n", ret, msg.source, msg.type);
-	msg.RETVAL = 33;
-	msg.type = 1111;
-	ret = msg_send(msg.source, &msg);
-	kprintf("send foo finish to target ret = %d\n", ret);
+	// MESSAGE msg;
+	// memset(&msg, 0, sizeof(MESSAGE));
+	// kprintf("before foo receive msg\n");
+	// msg.source = 0x1234;
+	// int ret = msg_recv(MSG_TARGET_ANY, &msg);
+	// kprintf("foo receive a message ret = %d | from src = %d | with type = %d \n", ret, msg.source, msg.type);
+	// msg.RETVAL = 33;
+	// msg.type = 1111;
+	// ret = msg_send(msg.source, &msg);
+	// kprintf("send foo finish to target ret = %d\n", ret);
 
 	return 0;
 }
@@ -161,7 +161,7 @@ static int eduos_init(void)
 	uart_init();
 #endif
 	initrd_init();
-	fat_init();
+	// fat_init();
 
 	return 0;
 }
@@ -176,6 +176,7 @@ int main(const char* real_code, uint32_t real_code_length)
 	eduos_init();
 	system_calibration(); // enables also interrupts
 
+	// list_fs(fs_root, 1);
 	// kprintf("This is eduOS %s Build %u, %u\n", EDUOS_VERSION, &__BUILD_DATE, &__BUILD_TIME);
 	// kprintf("Kernel starts at %p and ends at %p\n", &kernel_start, &kernel_end);
 	// kprintf("Processor frequency: %u MHz\n", get_cpu_frequency());
@@ -183,16 +184,16 @@ int main(const char* real_code, uint32_t real_code_length)
 	// kprintf("Current allocated memory: %lu KiB\n", atomic_int32_read(&total_allocated_pages) * PAGE_SIZE / 1024);
 	// kprintf("Current available memory: %lu KiB\n", atomic_int32_read(&total_available_pages) * PAGE_SIZE / 1024);
 
-	//vma_dump();
+	// vma_dump();
 
 	// create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
 	
 	// create_kernel_task(&ktask1_id, ktask1, "task1", LOW_PRIO);
-	// create_user_task(NULL, "/bin/hello", argv1);
-	create_user_task(NULL, "/bin/filemanager", argv2);
-	create_user_task(NULL, "/bin/bar", argv2);
+	create_user_task(NULL, "/bin/jacobi", argv1);
+	// create_user_task(NULL, "/bin/filemanager", argv2);
+	// create_user_task(NULL, "/bin/bar", argv2);
 	// kprintf("Real Code Addr = %x  | length = %d\n", (uint32_t)real_code, real_code_length);
-	memcpy((void*)0x7c00, real_code, real_code_length);
+	// memcpy((void*)0x7c00, real_code, real_code_length);
 
 	// int ret = back_to_rmode();
 
