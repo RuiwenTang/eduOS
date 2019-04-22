@@ -27,6 +27,7 @@
 [BITS 32]
 SECTION .text
 global _start
+global __dso_handle
 extern __bss_start
 extern __bss_end
 extern main
@@ -89,5 +90,8 @@ L4:
 
    ; endless loop
    jmp $
+
+__dso_handle:
+   dw 0
 
 SECTION .note.GNU-stack noalloc noexec nowrite progbits
