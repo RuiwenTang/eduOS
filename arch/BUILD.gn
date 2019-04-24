@@ -1,0 +1,14 @@
+
+static_library("libarch") {
+    sources = []
+    include_dirs = []
+    if (target_cpu == "x86") {
+        include_dirs += [
+            "//arch/include/x86"
+        ]
+        sources += [
+            "src/x86/gdt/sgdt.asm",
+            "src/x86/gdt/cgdt.c"
+        ]
+    }
+}
