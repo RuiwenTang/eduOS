@@ -1,0 +1,11 @@
+
+executable("hello-world") {
+    cflags = [
+        "-m32",
+        "-Wall"
+    ]
+    sources = [
+        "main.cpp",
+        "lib.asm"
+    ]
+}

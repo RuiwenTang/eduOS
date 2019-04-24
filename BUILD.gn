@@ -1,0 +1,13 @@
+
+group("root") {
+    deps = []
+    if (target_cpu == "x86") {
+        deps += [
+            "//kernel:kernel(//gn/toolchain:eduos-kernel-gccx86)",
+        ]
+    }
+    deps += [
+        "//simple:hello-world",
+        # "//apps:bar",
+    ]
+}

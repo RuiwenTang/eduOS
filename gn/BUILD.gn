@@ -1,0 +1,43 @@
+
+config("compiler_defaults") {
+    if (current_os == "linux") {
+        cflags = [
+            "-fPIC",
+            "-pthread"
+        ]
+    }
+
+
+    if (target_os == "eduos") {
+        cflags_cc = [
+            "-std=c++14"
+        ]
+        if (target_cpu == "x86") {
+            cflags = [
+                "-Wall",
+            ]
+        }
+    }
+}
+
+config("executable_ldconfig") {
+    if (target_os == "eduos") {
+        ldflags = ["-T", "link.ld", "-lsupc++"]
+    } else {
+        ldflags = [
+            "-pthread",
+        ]
+    }
+}
+
+config("kernel_ldconfig") {
+    if (target_os == "eduos") {
+        if (target_cpu == "x86") {
+            ldflags = [
+                "-T", "link32.ld"
+            ]
+        } else if (target_cpu == "x64") {
+
+        }
+    }
+}

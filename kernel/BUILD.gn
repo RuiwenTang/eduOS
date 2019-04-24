@@ -1,0 +1,40 @@
+
+
+
+executable("kernel") {
+    foo = rebase_path("link32.ld")
+
+    configs = []
+
+    ldflags = [
+        "-T",
+        foo,
+    ]
+
+    cflags = [
+        "-nostdlib",
+        "-nostdinc",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-nostartfiles",
+        "-nodefaultlibs",
+        "-Wall",
+        "-Wextra",
+        "-Werror"
+    ]
+
+    sources = [
+        "loader.asm",
+        "kmain.c"
+    ]
+
+    include_dirs = [
+        "//include"
+    ]
+
+    if (target_cpu == "x86") {
+        include_dirs += [
+            "//arch/include/x86"
+        ]
+    }
+}

@@ -1,0 +1,11 @@
+*.o
+*.dep
+*~
+*.elf
+*.sym
+documentation/html/
+tools/initrd.img
+tools/make_initrd
+.DS_Store
+.vscode/*
+out/*
