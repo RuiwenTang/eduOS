@@ -8,7 +8,9 @@ static_library("libarch") {
         ]
         sources += [
             "src/x86/gdt/sgdt.asm",
-            "src/x86/gdt/cgdt.c"
+            "src/x86/gdt/cgdt.c",
+            "src/x86/vga/vga.c",
+            "src/x86/arch.c"
         ]
     }
 }

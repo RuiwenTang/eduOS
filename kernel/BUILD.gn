@@ -39,6 +39,7 @@ executable("kernel") {
     }
 
     deps = [
-        "//arch:libarch"
+        "//arch:libarch",
+        "//libkern:libkern"
     ]
 }

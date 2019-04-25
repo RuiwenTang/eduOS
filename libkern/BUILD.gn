@@ -1,0 +1,15 @@
+
+static_library("libkern") {
+    include_dirs = [
+        "include",
+        "//include"
+    ]
+    if (target_cpu == "x86") {
+        include_dirs += [
+            "//arch/include/x86"
+        ]
+    }
+    sources =[
+
+    ]
+}
