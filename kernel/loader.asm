@@ -6,7 +6,7 @@ MULTIBOOT_MEMORY_INFO           equ 1<<1            ; need memory info
                                                     ; (magic number + checksum + flags should equal 0)
 FLAGS                           equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO             ; multiboot flags
 CHECKSUM                        equ -(MAGIC_NUMBER + FLAGS)   ; calculate the checksum
-KERNEL_STACK_SIZE equ 4096      ; size of stack in bytes
+KERNEL_STACK_SIZE equ 40960      ; size of stack in bytes
 
 section .text:                  ; start of the text (code) section
 align 4                         ; the code must be 4 byte aligned

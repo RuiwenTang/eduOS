@@ -10,6 +10,7 @@ SECTIONS {
 
     .rodata ALIGN (0x1000) : /* align at 4 KB */
     {
+        *(.rodata)
         *(.rodata*)          /* all read-only data sections from all files */
     }
 
