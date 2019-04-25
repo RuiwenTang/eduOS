@@ -25,7 +25,8 @@ executable("kernel") {
 
     sources = [
         "loader.asm",
-        "kmain.c"
+        "kmain.c",
+        "syscall.c"
     ]
 
     include_dirs = [
