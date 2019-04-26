@@ -30,7 +30,8 @@ executable("kernel") {
     ]
 
     include_dirs = [
-        "//include"
+        "//include",
+        "//libkern/include"
     ]
 
     if (target_cpu == "x86") {
