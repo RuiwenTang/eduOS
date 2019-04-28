@@ -2,10 +2,6 @@
 
 #include "stddef.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define GDT_NUM 10
 
 /// This segment is a data segment
@@ -85,7 +81,3 @@ void gdt_setup();
  */
 void gdt_set_gate(uint32_t index, uint32_t base, uint32_t limit, uint8_t access,
                   uint8_t gran);
-
-#ifdef __cplusplus
-}
-#endif

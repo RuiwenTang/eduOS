@@ -19,8 +19,6 @@ extern sum_of_three
 extern kmain
 loader:                         ; the loader label (defined as entry point in linker script)
     cli                         ; Disable interrupts
-    mov esp, kernel_stack
-    add esp, KERNEL_STACK_SIZE - 16
     push ebx
     call kmain
 
