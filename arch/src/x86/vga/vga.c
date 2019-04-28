@@ -106,11 +106,9 @@ void vga_clear(void) {
 }
 
 /* Puts a single character on the screen */
-int vga_putchar(unsigned char c) { return vga_putchar_color(c, attrib); }
-
-int vga_putchar_color(unsigned char c, uint8_t color) {
+int vga_putchar(unsigned char c) {
     uint16_t* where;
-    uint32_t att = color << 8;
+    uint32_t att = attrib << 8;
 
     /* Handle a backspace by moving the cursor back one space */
     if (c == 0x08) {
@@ -172,12 +170,10 @@ int vga_putchar_color(unsigned char c, uint8_t color) {
 }
 
 /* Uses the routine above to output a string... */
-int vga_puts(const char* text) { return vga_puts_color(text, attrib); }
-
-int vga_puts_color(const char* text, uint8_t color) {
+int vga_puts(const char* text) {
     size_t i;
 
-    for (i = 0; i < strlen(text); i++) vga_putchar_color(text[i], color);
+    for (i = 0; i < strlen(text); i++) vga_putchar(text[i]);
 
     return i - 1;
 }

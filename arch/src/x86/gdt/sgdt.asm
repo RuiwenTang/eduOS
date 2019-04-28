@@ -9,6 +9,7 @@ gdt_flush:
     mov ds, ax
     mov es, ax
     mov ss, ax
+    mov ax, 0
     mov fs, ax
     mov gs, ax
     jmp 0x08:flush2

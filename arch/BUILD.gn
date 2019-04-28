@@ -2,18 +2,6 @@
 static_library("libarch") {
     sources = []
     include_dirs = []
-    ccflags = []
-    ccflags += [
-        "-nostdlib",
-        "-nostdinc",
-        "-fno-builtin",
-        "-fno-stack-protector",
-        "-nostartfiles",
-        "-nodefaultlibs",
-        "-Wall",
-        "-Wextra",
-        "-Werror"
-        ]
     if (target_cpu == "x86") {
         include_dirs += [
             "//arch/include/x86"
@@ -21,14 +9,8 @@ static_library("libarch") {
         sources += [
             "src/x86/gdt/sgdt.asm",
             "src/x86/gdt/cgdt.c",
-            "src/x86/idt/sidt.asm",
-            "src/x86/idt/cidt.c",
-            "src/x86/irq/sirq.asm",
-            "src/x86/irq/cirq.c",
             "src/x86/vga/vga.c",
             "src/x86/arch.c"
         ]
-
-        
     }
 }
