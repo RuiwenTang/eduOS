@@ -25,7 +25,6 @@ char str16[] = "Unknown Interrupt";
 char str17[] = "Coprocessor Fault";
 char str18[] = "Alignment Check";
 char str19[] = "Machine Check";
-char str20[] = "Reservied";
 
 /** @brief Exception messages
  *
@@ -37,8 +36,8 @@ char str20[] = "Reservied";
 static const char* exception_messages[] = {
         str1,  str2,  str3,  str4,  str5,  str6,  str7,  str8,
         str9,  str10, str11, str12, str13, str14, str15, str16,
-        str17, str18, str19, str20, str20, str20, str20, str20,
-        str20, str20, str20, str20, str20, str20, str20, str20};
+        str17, str18, str19, 0,     0,     0,     0,     0,
+        0,     0,     0,     0,     0,     0,     0,     0};
 
 static idt_entry_t k_idts[256];
 static idt_ptr_t k_idt_ptr;
@@ -46,7 +45,6 @@ static idt_ptr_t k_idt_ptr;
 extern void idt_flush(idt_ptr_t* idt_ptr);
 
 static void fault_handler(registers_t regs);
-static int irq_remap(void);
 
 void idt_setup() {
     k_idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
@@ -151,8 +149,6 @@ void idt_setup() {
                  IDT_FLAG_PRESENT | IDT_FLAG_RING0 | IDT_FLAG_32BIT |
                          IDT_FLAG_INTTRAP);
 
-    irq_remap();
-
     idt_flush(&k_idt_ptr);
 }
 
@@ -190,33 +186,4 @@ static void fault_handler(registers_t regs) {
         while (1) {
         }
     }
-}
-
-/** @brief Remapping IRQs with a couple of IO output operations
- *
- * Normally, IRQs 0 to 7 are mapped to entries 8 to 15. This
- * is a problem in protected mode, because IDT entry 8 is a
- * Double Fault! Without remapping, every time IRQ0 fires,
- * you get a Double Fault Exception, which is NOT what's
- * actually happening. We send commands to the Programmable
- * Interrupt Controller (PICs - also called the 8259's) in
- * order to make IRQ0 to 15 be remapped to IDT entries 32 to
- * 47
- */
-static int irq_remap(void) {
-    outportb(PIC1_COMMAND, ICW1_INIT + ICW1_ICW4);  // ICW1
-    outportb(PIC2_COMMAND, ICW1_INIT + ICW1_ICW4);  // ICW1
-    outportb(PIC1_DATA, PIC1_OFFSET);               // ICW2
-    outportb(PIC2_DATA, PIC2_OFFSET);               // ICW2
-    outportb(PIC1_DATA, 4);  // ICW3: tell Master PIC that there is a slave PIC
-                             // at IRQ2(0000 0100)
-    outportb(PIC2_DATA,
-             2);  // ICW3: tell Slave PIC its cascade identity (0000 0010)
-    outportb(PIC1_DATA, ICW4_8086);
-    outportb(PIC2_DATA, ICW4_8086);
-
-    // write mask enable all interrupt
-    outportb(PIC1_DATA, 0x0);
-    outportb(PIC2_DATA, 0x0);
-    return 0;
 }
