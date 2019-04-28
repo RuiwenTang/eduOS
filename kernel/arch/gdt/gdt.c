@@ -1,4 +1,5 @@
 #include <asm/gdt.h>
+#include <eduos/string.h>
 
 gdt_ptr_t kernel_gdt_ptr;
 

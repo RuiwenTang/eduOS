@@ -28,6 +28,7 @@ executable("kernel") {
         "-Wall",
         "-Wextra",
         "-Werror",
+        "-finline-functions",
     ]
 
     if (target_cpu == "x86") {
@@ -41,6 +42,7 @@ executable("kernel") {
         "kmain.c",
         "arch/gdt/gdt.c",
         "arch/gdt/lib.asm",
+        "arch/vga/vga.c",
     ]
 
     include_dirs = [
