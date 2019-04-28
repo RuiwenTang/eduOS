@@ -2,13 +2,20 @@
 
 
 executable("kernel") {
-    foo = rebase_path("link32.ld")
+    link_file = ""
 
+    if (target_cpu == "x86") {
+        link_file = rebase_path("link32.ld")
+    }
+ 
     configs = []
 
     ldflags = [
         "-T",
-        foo,
+        link_file,
+        "-lgcc",
+        "-ffreestanding",
+        "-nostdlib",
     ]
 
     cflags = [
@@ -20,12 +27,20 @@ executable("kernel") {
         "-nodefaultlibs",
         "-Wall",
         "-Wextra",
-        "-Werror"
+        "-Werror",
     ]
+
+    if (target_cpu == "x86") {
+        cflags += [
+            "-DCONFIG_X86_32"
+        ]
+    }
 
     sources = [
         "loader.asm",
-        "kmain.c"
+        "kmain.c",
+        "arch/gdt/gdt.c",
+        "arch/gdt/lib.asm",
     ]
 
     include_dirs = [

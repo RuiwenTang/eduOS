@@ -21,7 +21,7 @@ loader:                         ; the loader label (defined as entry point in li
     cli                         ; Disable interrupts
     push ebx
     call kmain
-
+    add esp, 4
 .loop:
     jmp .loop                   ; loop forever
 
