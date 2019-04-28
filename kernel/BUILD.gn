@@ -37,8 +37,4 @@ executable("kernel") {
             "//arch/include/x86"
         ]
     }
-
-    deps = [
-        "//arch:libarch"
-    ]
 }

@@ -7,7 +7,7 @@ group("root") {
         ]
     }
     deps += [
-        # "//simple:hello-world",
+        "//simple:hello-world",
         # "//apps:bar",
     ]
 }
