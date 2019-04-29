@@ -6,7 +6,7 @@ MULTIBOOT_MEMORY_INFO           equ 1<<1            ; need memory info
                                                     ; (magic number + checksum + flags should equal 0)
 FLAGS                           equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO             ; multiboot flags
 CHECKSUM                        equ -(MAGIC_NUMBER + FLAGS)   ; calculate the checksum
-KERNEL_STACK_SIZE equ 4096      ; size of stack in bytes
+KERNEL_STACK_SIZE equ 8 << 10      ; size of stack in bytes .  8kb
 
 section .multiboot                 ; start of the text (code) section
 align 4                         ; the code must be 4 byte aligned
@@ -19,6 +19,8 @@ extern sum_of_three
 extern kmain
 loader:                         ; the loader label (defined as entry point in linker script)
     cli                         ; Disable interrupts
+    mov esp, kernel_stack
+    add esp, KERNEL_STACK_SIZE - 16
     push ebx
     call kmain
     add esp, 4

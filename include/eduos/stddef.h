@@ -8,6 +8,12 @@ extern "C" {
 
 #define NULL 0
 
+/// represents a task identifier
+typedef unsigned int tid_t;
+
+struct task;
+/// pointer to the current (running) task
+extern struct task* current_task;
 
 
 

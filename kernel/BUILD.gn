@@ -27,7 +27,6 @@ executable("kernel") {
         "-nodefaultlibs",
         "-Wall",
         "-Wextra",
-        "-Werror",
         "-finline-functions",
     ]
 
@@ -40,9 +39,16 @@ executable("kernel") {
     sources = [
         "loader.asm",
         "kmain.c",
+        "task.c",
         "arch/gdt/gdt.c",
         "arch/gdt/lib.asm",
         "arch/vga/vga.c",
+        "arch/idt/idt.c",
+        "arch/irq/lib.asm",
+        "arch/irq/irq.c",
+        "arch/isrs/isrs.c",
+        "syscall/syscall.c",
+        "libkern/kprintf.c",
     ]
 
     include_dirs = [

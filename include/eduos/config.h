@@ -8,10 +8,11 @@ extern "C" {
 #define EDUOS_VERSION "0.1"
 #define MAX_TASKS 16
 #define MAX_FNAME 128
-#define TIMER_FREQ 100          /* in HZ */
-#define CLOCK_TICK_RATE 1193182 /* 8254 chip's internal oscillator frequency \
-                                 */
-#define VIDEO_MEM_ADDR 0xB8000  /* the video memory address */
+#define TIMER_FREQ 100 /* in HZ */
+#define CLOCK_TICK_RATE                                                     \
+    1193182                    /* 8254 chip's internal oscillator frequency \
+                                */
+#define VIDEO_MEM_ADDR 0xB8000 /* the video memory address */
 #define CACHE_LINE 64
 #define KERNEL_STACK_SIZE (8 << 10)    /*  8 KiB */
 #define DEFAULT_STACK_SIZE (16 * 1024) /* 16 KiB */
@@ -21,6 +22,13 @@ extern "C" {
 #define MAILBOX_SIZE 32
 
 #define BYTE_ORDER LITTLE_ENDIAN
+
+/*
+ * This is not IDT-flag related. It's the segment selectors for kernel code and
+ * data.
+ */
+#define KERNEL_CODE_SELECTOR 0x08
+#define KERNEL_DATA_SELECTOR 0x10
 
 #define CONFIG_VGA
 #define CONFIG_PCI
