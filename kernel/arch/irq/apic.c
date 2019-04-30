@@ -489,6 +489,7 @@ no_mp:
 }
 
 static void apic_err_handler(struct state* s) {
+    UNUSED(s);
     kprintf("Got APIC error 0x%x\n", lapic_read(APIC_ESR));
 }
 

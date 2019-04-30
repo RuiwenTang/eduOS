@@ -90,6 +90,9 @@ size_t virt_to_phys(size_t addr) {
 
 // TODO: code is missing
 int page_set_flags(size_t viraddr, uint32_t npages, int flags) {
+    UNUSED(viraddr);
+    UNUSED(npages);
+    UNUSED(flags);
     return -EINVAL;
 }
 
@@ -178,23 +181,23 @@ int page_unmap(size_t viraddr, size_t npages) {
     return 0;
 }
 
-int page_map_drop(void) {
-    void traverse(int lvl, long vpn) {
-        long stop;
-        for (stop = vpn + PAGE_MAP_ENTRIES; vpn < stop; vpn++) {
-            if ((self[lvl][vpn] & PG_PRESENT) && (self[lvl][vpn] & PG_USER)) {
-                /* Post-order traversal */
-                if (lvl) traverse(lvl - 1, vpn << PAGE_MAP_BITS);
+void traverse_drop(int lvl, long vpn) {
+    long stop;
+    for (stop = vpn + PAGE_MAP_ENTRIES; vpn < stop; vpn++) {
+        if ((self[lvl][vpn] & PG_PRESENT) && (self[lvl][vpn] & PG_USER)) {
+            /* Post-order traversal */
+            if (lvl) traverse_drop(lvl - 1, vpn << PAGE_MAP_BITS);
 
-                put_pages(self[lvl][vpn] & PAGE_MASK, 1);
-                atomic_int32_dec(&current_task->user_usage);
-            }
+            put_pages(self[lvl][vpn] & PAGE_MASK, 1);
+            atomic_int32_dec(&current_task->user_usage);
         }
     }
+}
 
+int page_map_drop(void) {
     spinlock_irqsave_lock(&current_task->page_lock);
 
-    traverse(PAGE_LEVELS - 1, 0);
+    traverse_drop(PAGE_LEVELS - 1, 0);
 
     spinlock_irqsave_unlock(&current_task->page_lock);
 
@@ -202,42 +205,42 @@ int page_map_drop(void) {
     return 0;
 }
 
-int page_map_copy(task_t* dest) {
-    int traverse(int lvl, long vpn) {
-        long stop;
-        for (stop = vpn + PAGE_MAP_ENTRIES; vpn < stop; vpn++) {
-            if (self[lvl][vpn] & PG_PRESENT) {
-                if (self[lvl][vpn] & PG_USER) {
-                    size_t phyaddr = get_pages(1);
-                    if (BUILTIN_EXPECT(!phyaddr, 0)) return -ENOMEM;
+static int traverse_copy(int lvl, long vpn, task_t* dest) {
+    long stop;
+    for (stop = vpn + PAGE_MAP_ENTRIES; vpn < stop; vpn++) {
+        if (self[lvl][vpn] & PG_PRESENT) {
+            if (self[lvl][vpn] & PG_USER) {
+                size_t phyaddr = get_pages(1);
+                if (BUILTIN_EXPECT(!phyaddr, 0)) return -ENOMEM;
+                atomic_int32_inc(&dest->user_usage);
 
-                    atomic_int32_inc(&dest->user_usage);
+                other[lvl][vpn] = phyaddr | (self[lvl][vpn] & ~PAGE_MASK);
 
-                    other[lvl][vpn] = phyaddr | (self[lvl][vpn] & ~PAGE_MASK);
-                    if (lvl) /* PML4, PDPT, PGD */
-                        traverse(
-                                lvl - 1,
-                                vpn << PAGE_MAP_BITS); /* Pre-order traversal */
-                    else {                             /* PGT */
-                        page_map(PAGE_TMP, phyaddr, 1, PG_RW);
-                        memcpy((void*)PAGE_TMP, (void*)(vpn << PAGE_BITS),
-                               PAGE_SIZE);
-                    }
-                } else if (self[lvl][vpn] & PG_SELF)
-                    other[lvl][vpn] = 0;
-                else
-                    other[lvl][vpn] = self[lvl][vpn];
-            } else
+                if (lvl) { /* PML4, PDPT, PGD */
+                    traverse_copy(lvl - 1, vpn << PAGE_MAP_BITS, dest);
+                } else {
+                    page_map(PAGE_TMP, phyaddr, 1, PG_RW);
+                    memcpy((void*)PAGE_TMP, (void*)(vpn << PAGE_BITS),
+                           PAGE_SIZE);
+                }
+            } else if (self[lvl][vpn] & PG_SELF) {
                 other[lvl][vpn] = 0;
+            } else {
+                other[lvl][vpn] = self[lvl][vpn];
+            }
+        } else {
+            other[lvl][vpn] = 0;
         }
-        return 0;
     }
+    return 0;
+}
 
+int page_map_copy(task_t* dest) {
     spinlock_irqsave_lock(&current_task->page_lock);
     self[PAGE_LEVELS - 1][PAGE_MAP_ENTRIES - 2] =
             dest->page_map | PG_PRESENT | PG_SELF | PG_RW;
 
-    int ret = traverse(PAGE_LEVELS - 1, 0);
+    int ret = traverse_copy(PAGE_LEVELS - 1, 0, dest);
 
     other[PAGE_LEVELS - 1][PAGE_MAP_ENTRIES - 1] =
             dest->page_map | PG_PRESENT | PG_SELF | PG_RW;
@@ -305,7 +308,7 @@ default_handler:
 
 int page_init(void) {
     size_t addr, npages;
-    int i;
+    uint32_t i;
 
     /* Replace default pagefault handler */
     irq_uninstall_handler(14);

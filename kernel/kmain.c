@@ -1,4 +1,5 @@
 #include <eduos/config.h>
+#include <eduos/fs.h>
 #include <eduos/memory.h>
 #include <eduos/processor.h>
 #include <eduos/stddef.h>
@@ -41,6 +42,8 @@ static void eduos_kernel_init() {
     timer_init();
     multitasking_init();
     memory_init();
+
+    fs_init();
 }
 
 static int foo(void* arg) {
@@ -68,18 +71,7 @@ void kmain(multiboot_info_t* boot_info) {
     kprintf("Current available memory: %lu KiB\n",
             atomic_int32_read(&total_available_pages) * PAGE_SIZE / 1024);
 
-    kprintf("_int32 = %p | int32_end = %p \n", &_int32, &int32_end);
-    uint32_t real_code_length = ((uint32_t)&int32_end) - ((uint32_t) & _int32);
-    memcpy((void*)0x7c00, &_int32, real_code_length);
+    list_fs(fs_root, 1);
 
-    regs16_t regs;
-    memset(&regs, 0, sizeof(regs16_t));
-    regs.ax = 0x0013;
-    int32(0x10, &regs);
-    memset((char*)0xA0000, 1, (320 * 200));
-    memset((char*)0xA0000 + (100 * 320 + 80), 14, 80);
-    regs.ax = 0x0000;
-    int32(0x16, &regs);
-    regs.ax = 0x0003;
-    int32(0x10, &regs);
+    create_kernel_task(NULL, foo, "foo", NORMAL_PRIO);
 }

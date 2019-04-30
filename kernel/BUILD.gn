@@ -68,6 +68,7 @@ executable("kernel") {
         "mm/memory.c",
         "mm/malloc.c",
         "fs/fs.c",
+        "fs/initrd.c",
     ]
 
     include_dirs = [

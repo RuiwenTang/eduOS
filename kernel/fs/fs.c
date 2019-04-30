@@ -187,7 +187,7 @@ vfs_node_t* findnode_fs(const char* name) {
 }
 
 void list_fs(vfs_node_t* node, uint32_t depth) {
-    int j, i = 0;
+    uint32_t j, i = 0;
     dirent_t* dirent = NULL;
     fildes_t* file = kmalloc(sizeof(fildes_t));
     file->offset = 0;
@@ -218,4 +218,15 @@ void list_fs(vfs_node_t* node, uint32_t depth) {
         i++;
     }
     kfree(file);
+}
+
+static vfs_node_t root_node;
+
+void fs_init() {
+    fs_root = &root_node;
+    memset(fs_root, 0, sizeof(vfs_node_t));
+
+    spinlock_init(&root_node.lock);
+
+    mkdir_fs(fs_root, "bin");
 }
