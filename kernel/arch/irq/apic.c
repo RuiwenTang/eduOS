@@ -30,17 +30,16 @@
 #include <asm/io.h>
 #include <asm/irq.h>
 #include <asm/irqflags.h>
-#include <asm/multiboot.h>
 #include <asm/page.h>
 #include <eduos/errno.h>
 #include <eduos/processor.h>
 #include <eduos/spinlock.h>
 #include <eduos/stddef.h>
 #include <eduos/stdio.h>
-#include <eduos/stdlib.h>
 #include <eduos/string.h>
 #include <eduos/time.h>
 #include <eduos/vma.h>
+#include <multiboot/multiboot.h>
 
 /*
  * Note that linker symbols are not variables, they have no memory allocated for
@@ -335,15 +334,15 @@ found_mp:
     kprintf("MP features 1: %u\n", apic_mp->features[0]);
 
     if (apic_mp->features[0]) {
-        kputs("Currently, eduOS supports only multiprocessing via the MP "
-              "config tables!\n");
+        kprintf("Currently, eduOS supports only multiprocessing via the MP "
+                "config tables!\n");
         goto no_mp;
     }
 
     if (apic_mp->features[1] & 0x80)
-        kputs("PIC mode implemented\n");
+        kprintf("PIC mode implemented\n");
     else
-        kputs("Virtual-Wire mode implemented\n");
+        kprintf("Virtual-Wire mode implemented\n");
 
     apic_config = (apic_config_table_t*)((size_t)apic_mp->mp_config);
     if (((size_t)apic_config & PAGE_MASK) != ((size_t)apic_mp & PAGE_MASK)) {
@@ -358,7 +357,7 @@ found_mp:
 
     if (!apic_config ||
         strncmp((void*)&apic_config->signature, "PCMP", 4) != 0) {
-        kputs("Invalid MP config table\n");
+        kprintf("Invalid MP config table\n");
         goto no_mp;
     }
 
@@ -431,7 +430,7 @@ found_mp:
     kprintf("Found %u cores\n", count);
 
     if (count > MAX_CORES) {
-        kputs("Found too many cores! Increase the macro MAX_CORES!\n");
+        kprintf("Found too many cores! Increase the macro MAX_CORES!\n");
         goto no_mp;
     }
     ncores = count;

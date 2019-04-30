@@ -115,16 +115,6 @@ int irq_uninstall_handler(unsigned int irq) {
  * 47
  */
 static int irq_remap(void) {
-    // outportb(0x20, 0x11);
-    // outportb(0xA0, 0x11);
-    // outportb(0x21, 0x20);
-    // outportb(0xA1, 0x28);
-    // outportb(0x21, 0x04);
-    // outportb(0xA1, 0x02);
-    // outportb(0x21, 0x01);
-    // outportb(0xA1, 0x01);
-    // outportb(0x21, 0x0);
-    // outportb(0xA1, 0x0);
     outportb(PIC1_COMMAND, ICW1_INIT + ICW1_ICW4);  // ICW1
     outportb(PIC2_COMMAND, ICW1_INIT + ICW1_ICW4);  // ICW1
     outportb(PIC1_DATA, PIC1_OFFSET);               // ICW2

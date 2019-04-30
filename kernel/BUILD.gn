@@ -32,7 +32,9 @@ executable("kernel") {
 
     if (target_cpu == "x86") {
         cflags += [
-            "-DCONFIG_X86_32"
+            "-DCONFIG_X86_32",
+            "-DWITH_PCI_NAMES",
+            "-D__SIZEOF_POINTER__=4"
         ]
     }
 
@@ -40,15 +42,30 @@ executable("kernel") {
         "loader.asm",
         "kmain.c",
         "task.c",
+        "arch/time.c",
+        "arch/task.c",
+        "arch/processor.c",
         "arch/gdt/gdt.c",
         "arch/gdt/lib.asm",
         "arch/vga/vga.c",
         "arch/idt/idt.c",
         "arch/irq/lib.asm",
         "arch/irq/irq.c",
+        "arch/irq/apic.c",
         "arch/isrs/isrs.c",
+        "arch/page/page.c",
         "syscall/syscall.c",
         "libkern/kprintf.c",
+        "libkern/dividi3.c",
+        "libkern/moddi3.c",
+        "libkern/qdivrem.c",
+        "libkern/udivdi3.c",
+        "libkern/umoddi3.c",
+        "libkern/string.c",
+        "mm/vma.c",
+        "mm/memory.c",
+        "mm/malloc.c",
+        "fs/fs.c",
     ]
 
     include_dirs = [

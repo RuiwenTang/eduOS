@@ -29,5 +29,6 @@ loader:                         ; the loader label (defined as entry point in li
 
 section .bss
 align 4
+global kernel_stack 
 kernel_stack:
     resb KERNEL_STACK_SIZE

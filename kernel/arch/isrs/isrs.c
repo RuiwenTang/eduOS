@@ -204,17 +204,17 @@ void isrs_install(void) {
 }
 
 static void fpu_handler(struct state* s) {
-    // task_t* task = current_task;
+    task_t* task = current_task;
 
-    // asm volatile("clts");  // clear the TS flag of cr0
-    // if (!(task->flags & TASK_FPU_INIT)) {
-    //     // use the FPU at the first time => Initialize FPU
-    //     fpu_init(&task->fpu);
-    //     task->flags |= TASK_FPU_INIT;
-    // }
+    asm volatile("clts");  // clear the TS flag of cr0
+    if (!(task->flags & TASK_FPU_INIT)) {
+        // use the FPU at the first time => Initialize FPU
+        fpu_init(&task->fpu);
+        task->flags |= TASK_FPU_INIT;
+    }
 
-    // restore_fpu_state(&task->fpu);
-    // task->flags |= TASK_FPU_USED;
+    restore_fpu_state(&task->fpu);
+    task->flags |= TASK_FPU_USED;
 }
 
 /** @brief Exception messages

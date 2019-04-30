@@ -40,10 +40,8 @@
 #include <asm/apic.h>
 #include <asm/gdt.h>
 #include <asm/irqflags.h>
-#include <eduos/stddef.h>
-#ifdef CONFIG_PCI
 #include <asm/pci.h>
-#endif
+#include <eduos/stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,9 +1,32 @@
 #include <asm/gdt.h>
+#include <asm/page.h>
+#include <asm/tss.h>
 #include <eduos/string.h>
+#include <eduos/tasks.h>
 
 gdt_ptr_t kernel_gdt_ptr;
-
+static tss_t task_state_segment __attribute__((aligned(PAGE_SIZE)));
 static gdt_entry_t kernel_gdts[GDT_ENTRIES];
+
+extern const void kernel_stack;
+
+void set_kernel_stack(void) {
+    task_t* curr_task = current_task;
+
+#ifdef CONFIG_X86_32
+    task_state_segment.esp0 = (size_t)curr_task->stack + KERNEL_STACK_SIZE -
+                              16;  // => stack is 16byte aligned
+#else
+    task_state_segment.rsp0 = (size_t)curr_task->stack + KERNEL_STACK_SIZE -
+                              16;  // => stack is 16byte aligned
+#endif
+}
+
+size_t get_kernel_stack(void) {
+    task_t* curr_task = current_task;
+
+    return (size_t)curr_task->stack + KERNEL_STACK_SIZE - 16;
+}
 
 /*
  * This is defined in entry.asm. We use this to properly reload
@@ -115,15 +138,14 @@ void gdt_install(void) {
                  GDT_FLAG_PRESENT | GDT_FLAG_TSS | GDT_FLAG_RING0, gran_ds);
 #elif defined(CONFIG_X86_32)
     /* set default values */
-    // task_state_segment.eflags = 0x1202;
-    // task_state_segment.ss0 = 0x10;  // data segment
-    // task_state_segment.esp0 = (size_t)&boot_stack - 0x10;
-    // task_state_segment.cs = 0x0b;
-    // task_state_segment.ss = task_state_segment.ds = task_state_segment.es =
-    //         task_state_segment.fs = task_state_segment.gs = 0x13;
-    // gdt_set_gate(num++, (unsigned long)(&task_state_segment), sizeof(tss_t) -
-    // 1,
-    //              GDT_FLAG_PRESENT | GDT_FLAG_TSS | GDT_FLAG_RING0, gran_ds);
+    task_state_segment.eflags = 0x1202;
+    task_state_segment.ss0 = 0x10;  // data segment
+    task_state_segment.esp0 = (size_t)&kernel_stack - 0x10;
+    task_state_segment.cs = 0x0b;
+    task_state_segment.ss = task_state_segment.ds = task_state_segment.es =
+            task_state_segment.fs = task_state_segment.gs = 0x13;
+    gdt_set_gate(num++, (unsigned long)(&task_state_segment), sizeof(tss_t) - 1,
+                 GDT_FLAG_PRESENT | GDT_FLAG_TSS | GDT_FLAG_RING0, gran_ds);
 #endif
 
     /* make a 16 bit data and code segment */
