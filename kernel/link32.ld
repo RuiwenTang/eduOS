@@ -27,4 +27,10 @@ SECTIONS {
     }
     bss_end = .;
     kernel_end = .;
+
+    /* . = 0x00009200;   */
+    .v86 ALIGN (0x1000) :
+    {
+        *(.text)
+    }
 }

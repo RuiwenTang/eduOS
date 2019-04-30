@@ -38,6 +38,7 @@
 #define __ARCH_PCI_H__
 
 #include <asm/stddef.h>
+#include <eduos/config.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -60,7 +60,7 @@
 /// Page map bits
 #define PAGE_MAP_BITS 10
 /// Number of page map indirections
-#define PAGE_LEVELS 2
+#define PAGE_LEVELS 4
 #elif defined(CONFIG_X86_64)
 /// Total operand width in bits
 #define BITS 64

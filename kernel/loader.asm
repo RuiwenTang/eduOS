@@ -27,6 +27,14 @@ loader:                         ; the loader label (defined as entry point in li
 .loop:
     jmp .loop                   ; loop forever
 
+; int detect_v86()
+global detect_v86
+detect_v86:
+   smsw    ax
+   and     eax,1           ;CR0.PE bit
+   ret
+
+
 section .bss
 align 4
 global kernel_stack 

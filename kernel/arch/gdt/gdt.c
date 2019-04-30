@@ -149,14 +149,14 @@ void gdt_install(void) {
 #endif
 
     /* make a 16 bit data and code segment */
-    // gdt_set_gate(num++, 0x0, 0xffff,
-    //              GDT_FLAG_DATASEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT |
-    //                      GDT_FLAG_SEGMENT,
-    //              GDT_FLAG_16_BIT);
-    // gdt_set_gate(num++, 0x0, 0xffff,
-    //              GDT_FLAG_CODESEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT |
-    //                      GDT_FLAG_SEGMENT,
-    //              GDT_FLAG_16_BIT);
+    gdt_set_gate(num++, 0x0, 0xffff,
+                 GDT_FLAG_DATASEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT |
+                         GDT_FLAG_SEGMENT,
+                 GDT_FLAG_16_BIT);
+    gdt_set_gate(num++, 0x0, 0xffff,
+                 GDT_FLAG_CODESEG | GDT_FLAG_RING0 | GDT_FLAG_PRESENT |
+                         GDT_FLAG_SEGMENT,
+                 GDT_FLAG_16_BIT);
 
     /* Flush out the old GDT and install the new changes! */
     gdt_flush(&kernel_gdt_ptr);
