@@ -79,6 +79,12 @@ extern "C" {
 #define GDT_FLAG_32_BIT 0x40
 #define GDT_FLAG_64_BIT 0x20
 
+/**
+ * @brief Code selector
+ *
+ */
+#define KERNEL_CODE_SELECTOR 0x08
+
 /** @brief Defines a GDT entry
  *
  * A global descriptor table entry consists of:

@@ -2,7 +2,8 @@
 executable("hello-world") {
     cflags = [
         "-m32",
-        "-Wall"
+        "-Wall",
+        "-std=c++14"
     ]
     sources = [
         "main.cpp",

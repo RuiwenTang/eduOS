@@ -40,9 +40,7 @@ executable("kernel") {
     sources = [
         "loader.asm",
         "kmain.c",
-        "arch/gdt/gdt.c",
-        "arch/gdt/lib.asm",
-        "arch/vga/vga.c",
+        "kernel.cpp",
     ]
 
     include_dirs = [
@@ -52,6 +50,14 @@ executable("kernel") {
     if (target_cpu == "x86") {
         include_dirs += [
             "//arch/include/x86"
+        ]
+
+        sources += [
+            "arch/lib.asm",
+            "arch/gdt/gdt.c",
+            "arch/idt/idt.c",
+            "arch/idt/isr.c",
+            "arch/vga/vga.c",
         ]
     }
 }
