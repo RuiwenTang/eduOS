@@ -54,6 +54,7 @@ executable("kernel") {
 
         sources += [
             "arch/lib.asm",
+            "arch/int32.asm",
             "arch/gdt/gdt.c",
             "arch/idt/idt.c",
             "arch/idt/isr.c",

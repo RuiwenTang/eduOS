@@ -118,7 +118,7 @@ typedef struct {
 } __attribute__((packed)) gdt_ptr_t;
 
 #ifdef CONFIG_X86_32
-#define GDT_ENTRIES (7 + 1)
+#define GDT_ENTRIES (1 + 2 + 2 + 2 + 1)
 #else
 // a TSS descriptor is twice larger than a code/data descriptor
 #define GDT_ENTRIES (8 + 1 * 2)
