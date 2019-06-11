@@ -1,5 +1,6 @@
 #include <asm/gdt.h>
 #include <asm/idt.h>
+#include <asm/irq.h>
 #include <eduos/stddef.h>
 #include <eduos/string.h>
 
@@ -147,6 +148,8 @@ void idt_install() {
     idt_set_gate(31, (size_t)isr31, KERNEL_CODE_SELECTOR,
                  IDT_FLAG_PRESENT | IDT_FLAG_RING0 | IDT_FLAG_32BIT |
                          IDT_FLAG_INTTRAP);
+
+    irq_init();
 
     idt_flush(&kernel_idt_ptr);
 }

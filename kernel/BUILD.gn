@@ -59,6 +59,7 @@ executable("kernel") {
             "arch/idt/idt.c",
             "arch/idt/isr.c",
             "arch/vga/vga.c",
+            "arch/irq/irq.c",
         ]
     }
 }

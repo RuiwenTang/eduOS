@@ -306,3 +306,47 @@ isr31:
     push byte 31
     jmp isr_common_stub
 
+extern irq_handler
+
+; This is a stub that we have created for IRQ based ISRs. This calls
+; 'irq_handler' in our C code. We need to create this in an 'irq.c'
+irq_common_stub:
+    pusha
+    push ds
+    push es
+    push fs
+    push gs
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov eax, esp
+    push eax
+    mov eax, irq_handler
+    call eax
+    pop eax
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+    add esp, 8
+    iret
+
+; NASM macro for asynchronous interrupts (no exceptions)
+%macro irqstub 1
+    global irq%1
+    irq%1:
+        cli
+        push byte 0 ; pseudo error code
+        push byte 32+%1
+        jmp irq_common_stub
+%endmacro
+
+; Create entries for the interrupts 0 to 23
+%assign i 0
+%rep    24
+    irqstub i
+%assign i i+1
+%endrep
