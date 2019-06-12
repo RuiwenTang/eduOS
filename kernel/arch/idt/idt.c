@@ -46,6 +46,8 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+void timer_install();
+
 void idt_install() {
     kernel_idt_ptr.limit = (sizeof(idt_entry) * IDT_NUM) - 1;
     kernel_idt_ptr.base = (unsigned int)(&kernel_idts);
@@ -151,7 +153,11 @@ void idt_install() {
 
     irq_init();
 
+    timer_install();
+
     idt_flush(&kernel_idt_ptr);
+
+    asm("sti");
 }
 
 /** @brief Configures and returns a IDT entry with chosen attributes

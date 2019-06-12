@@ -8,8 +8,7 @@ extern "C" {
 
 #define NULL 0
 
-
-
+#define UNUSED(x) (void)x
 
 #ifdef __cplusplus
 }
