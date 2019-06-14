@@ -1,4 +1,5 @@
 #include <eduos/config.h>
+#include <eduos/mmu.h>
 #include <eduos/stddef.h>
 #include <eduos/string.h>
 
@@ -22,12 +23,12 @@ static void eduos_kernel_init() {
 #endif
 }
 
-void kmain(multiboot_info_t* boot_info) {
+extern "C" void kmain(multiboot_info_t* boot_info) {
     if (boot_info == NULL) {
     } else {
         eduos_kernel_init();
     }
-
+    page_init(boot_info);
     vga_puts("aaa\n");
     // regs16_t regs;
     // int y;

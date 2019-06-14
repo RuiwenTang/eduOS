@@ -39,7 +39,7 @@ typedef unsigned char uint8_t;
 /// Signed 8 bit integer (/char)
 typedef char int8_t;
 /// 16 bit wide char type
-typedef unsigned short wchar_t;
+// typedef unsigned short wchar_t;
 
 /// This defines what the stack looks like after the task context is saved.
 struct state {
